@@ -1,0 +1,43 @@
+<h1>Step one : upload a picture</h1>
+<div class="wide-span">
+  You can upload your own picture, or use the default one to try the wep app.
+</div>
+<br>
+<div>
+  <p-button label="Upload picture" (click)="clickUpload()" [style]="{'width':'500px'}"></p-button>
+</div>
+<canvas #compareCanvas width="500px" height="500px"></canvas>
+<br>
+<h1>Step two : run face detection</h1>
+<div class="wide-span">
+  The picture will be sent to the Azure Face api. The face recognition information will be used to reframe your picture, and add error correction around the important and recognizable parts of the face (eyes, nose, mouth).
+  <br>
+  If the face recognition was successful, you should see green lines and dots added to your picture.
+</div>
+<br>
+<div>
+  <p-button label="Run face recognition" (click)="faceRecognition()" [style]="{'width':'500px'}"></p-button>
+</div>
+<br>
+<div>
+  <p-button label="Reframe" (click)="reframe()" [style]="{'width':'500px'}" [disabled]="faceResponse==undefined"></p-button>
+</div>
+<br>
+<h1>Step three : run the algorithm</h1>
+<div class="wide-span">
+  The alorithm will run to find the best path to reproduce your image using "circular looming". This might take a while.
+</div>
+<br>
+<div>
+  <p-button label="Run algorithm" (click)="minimumError()" [style]="{'width':'500px'}"></p-button>
+</div>
+<br>
+<app-loom-helper #loomHelper></app-loom-helper>
+<br>
+<h1>Step four : Build the portrait</h1>
+<div class="wide-span">
+  You can use the slider above to go to a specific instruction. Press play to start dictating instructions. Using the default speed, one instruction is played evry 4 seconds. For a portrait using 1500 arcs, the "looming" process should take about two hours.
+</div>
+
+<canvas class="reference-anvas" #referenceCanvas width="200px" height="200px"></canvas>
+<input type="file" id="pictureUploader" accept="image/png, image/jpeg" style="display: none" (change)="upload()">

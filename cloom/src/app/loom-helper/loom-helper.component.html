@@ -1,0 +1,17 @@
+<svg width="500px" height="500px" version="1.1" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <path [attr.d]="path" fill="none" stroke="#009" stroke-width=".2"/>
+  <circle [attr.cx]="loomDiameter/2" [attr.cy]="loomDiameter/2" [attr.r]="(loomDiameter/2) - (loomRimWidth/2)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" [attr.stroke-width]="loomRimWidth"/>
+</svg>
+<div class="p-inputgroup control-bar">  
+  <button (click)="addIndex(-10)" pButton type="button" icon="pi pi-angle-double-left" class="p-button-secondary"></button>
+  <button (click)="addIndex(-1)" pButton type="button" icon="pi pi-angle-left" class="p-button-secondary"></button>
+  <button (click)="playPause()" pButton type="button" icon="pi pi-step-forward" class="p-button-secondary" [disabled]="!canPressPlay" ></button>
+  <input type="number" pInputText [(ngModel)]="currentPin">
+  <button (click)="addIndex(1)" pButton type="button" icon="pi pi-angle-right" class="p-button-secondary"></button>
+  <button (click)="addIndex(10)" pButton type="button" icon="pi pi-angle-double-right" class="p-button-secondary"></button>
+</div>
+<p-slider [(ngModel)]="currentPin" [min]="0" [max]="pinPath.length" [style]="{'width': '500px'}"></p-slider>
+<br>
+<div *ngIf="instructions != undefined && instructions.length > 0">Current instruction : {{instructions[currentPin]}}</div>
+<div>Total string length : {{totalLenghtForDisplay}}</div>
+<div>Number of arcs : {{nbArcs}}</div>
