@@ -13,6 +13,7 @@ const routes: Routes = [
     path: 'drill',
     component: PrintDrillGuideComponent
   },
+  { path: 'loom/:id', component: LoomHelperComponent },
   {
     path: 'loom',
     component: LoomHelperComponent

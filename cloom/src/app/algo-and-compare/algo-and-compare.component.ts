@@ -205,12 +205,13 @@ export class AlgoAndCompareComponent implements OnInit {
         fullImageData.data[indexG] = 0;//greyscale;
         fullImageData.data[indexB] = 0;//greyscale;
 
-        this.referenceData.push(255 - greyscale);
+        //this.referenceData.push(255 - greyscale);
+        this.referenceData.push(255 - r);
       }
     }
 
     // After this point only the red channel is containing the greyscale data
-    referenceCtx.putImageData(fullImageData, 0, 0);
+    //referenceCtx.putImageData(fullImageData, 0, 0);
 
     // We draw the error correcting polygons, using additive blending and the green channel
     this.updateFacePolygonsReference();
@@ -247,7 +248,7 @@ export class AlgoAndCompareComponent implements OnInit {
     let optionsMinimumError: OptionsMinimumError = {
       pins: pinsReference,
       minDistanceBetweenPins: 25,
-      threadContrast: 20,
+      threadContrast: 13,
       referenceSize: this.referenceImageSize,
       referenceData: this.referenceData,
       errorWeightData: this.errorWeightData

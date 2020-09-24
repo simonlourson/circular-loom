@@ -65,16 +65,15 @@ export class AlgoMinimumError implements AlgoBase {
 
         // The error for this line right now
         let currentError = this.options.referenceData[pixelIndex] - this.lineData[pixelIndex];
-        currentError = currentError * currentError;
+        currentError = (currentError * currentError);
 
         // The error for this line if we where to draw it
         let tentativeError = this.options.referenceData[pixelIndex] - this.lineData[pixelIndex] - this.options.threadContrast;
-        tentativeError = tentativeError * tentativeError;
+        tentativeError = (tentativeError * tentativeError);
 
         // The error delta, the higher, the better the line. If this is negative, drawing the line will make the final picture worse
         let errorDelta = currentError - tentativeError;
         let errorWeight = (this.options.errorWeightData[pixelIndex] / 255) * 1 + 1;
-        //console.log(errorWeight)
         errorDeltas[lineIndex] += errorDelta * pixel.weight * errorWeight;
 
         totalWeight += pixel.weight;
