@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Vector2 } from '../common/vector2';
 import { SavedLoom } from '../common/saved-loom';
 import { AlgoHelpers } from '../common/algo-base';
@@ -26,44 +26,60 @@ export class LoomHelperComponent implements OnInit {
 
   get totalLenghtForDisplay() { return this.totalLength.toFixed(2) + ' m' }
 
-  loomDiameter: number = 800;
+  @Input() loomType: LoomType;
+  @Input() loomDiameter: number;
+  @Input() loomRimWidth: number;
   quadraticError: number = 10;
-  loomRimWidth: number = 20;
-  nbPins: number = 200;
-  threadColor: string = '#003000';
+  threadColor: string = '#E000D1';
   threadWidth: string = '.2';
   pins: Vector2[];
-  path: string = ''
+  path: string = '';
 
   quadraticBezierCurveToRemember: Vector2[];
 
-  get viewBox(): string { return '0 0 ' + this.loomDiameter + ' ' + this.loomDiameter; }
+  get viewBox(): string { 
+    if (this.loomType == LoomType.Circle) return '0 0 ' + this.loomDiameter + ' ' + this.loomDiameter;
+    else if (this.loomType == LoomType.Rectangle) return '0 0 ' + this.loomDiameter + ' ' + this.loomDiameter;
+    else throw new Error('Unknown loom type');
+  }
+
+  get isLoomTypeCircle(): boolean { return this.loomType == LoomType.Circle; }
+  get isLoomTypeRectangle(): boolean { return this.loomType == LoomType.Rectangle; }
 
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
+    // LMA Log
+    let pinRectangle = AlgoHelpers.generatePinPositionsRectangle(12, 0, 3, 3);
+    console.log(pinRectangle);
+    let possibleLines = AlgoHelpers.generatePossibleLinesRenctangle(pinRectangle, 3, 3);
+    console.log(possibleLines);
+
     this.initPins();
     this.audioInstructions = [];
 
     this.route.params.subscribe((params: Params): void => {
       let path = params.id;
-      fetch('/assets/' + path + '.json')
-      .then(response => { return response.json(); })
-      .then(json => {
-        let savedLoom = SavedLoom.copyFrom(json);
-        this.pins = savedLoom.pins;
-        this.pinPath = savedLoom.pinPath;
-        this.loomDiameter = savedLoom.loomDiameter;
-        this.loomRimWidth = savedLoom.loomRimWidth;
-        this.threadColor = savedLoom.threadColor;
-        this.threadWidth = savedLoom.threadWidth;
+      if (path != undefined) {
+        fetch('/assets/' + path + '.json')
+        .then(response => { return response.json(); })
+        .then(json => {
+          let savedLoom = SavedLoom.copyFrom(json);
+          this.pins = savedLoom.pins;
+          this.pinPath = savedLoom.pinPath;
+          this.loomDiameter = savedLoom.loomDiameter;
+          this.loomRimWidth = savedLoom.loomRimWidth;
+          this.threadColor = savedLoom.threadColor;
+          this.threadWidth = savedLoom.threadWidth;
 
-        this.initInstructions();
-        this.setToMax();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+          this.initInstructions();
+          this.setToMax();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
     });
   }
 
@@ -116,9 +132,9 @@ export class LoomHelperComponent implements OnInit {
   }
 
   initPins() {
-    let pinCenter = new Vector2(this.loomDiameter / 2, this.loomDiameter / 2);
-    let pinRadius = this.loomDiameter / 2 - this.loomRimWidth / 2;
-    this.pins = AlgoHelpers.generatePinPositions(this.nbPins, pinCenter, pinRadius);
+    //let pinCenter = new Vector2(this.loomDiameter / 2, this.loomDiameter / 2);
+    //let pinRadius = this.loomDiameter / 2 - this.loomRimWidth / 2;
+    //this.pins = AlgoHelpers.generatePinPositions(this.nbPins, pinCenter, pinRadius);
 
     this.quadraticBezierCurveToRemember = [];
 
@@ -138,6 +154,23 @@ export class LoomHelperComponent implements OnInit {
     a.click();
     a.remove();
     */
+  }
+
+  saveLoom() {
+    let tom = new SavedLoom();
+    tom.pinPath = this.pinPath;
+    tom.pins = this.pins;
+    tom.loomDiameter = 600;
+    tom.loomRimWidth = 20;
+    tom.threadColor = '#009';
+    tom.threadWidth = '.2';
+
+    let a = document.createElement('a');
+    document.body.append(a);
+    a.download = 'tom.json';
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(tom)], {}));
+    a.click();
+    a.remove();
   }
 
   initInstructions() {
@@ -234,4 +267,9 @@ export class LoomHelperComponent implements OnInit {
     return returnValue;
   }
 
+}
+
+export enum LoomType {
+  Circle,
+  Rectangle
 }

@@ -10,7 +10,7 @@ const routes: Routes = [
     component: AlgoAndCompareComponent
   },
   {
-    path: 'drill',
+    path: 'print',
     component: PrintDrillGuideComponent
   },
   { path: 'loom/:id', component: LoomHelperComponent },

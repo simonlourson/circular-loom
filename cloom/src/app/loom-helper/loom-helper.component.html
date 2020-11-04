@@ -1,6 +1,7 @@
 <svg width="500px" height="500px" version="1.1" [attr.viewBox]="viewBox" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <path [attr.d]="path" fill="none" [attr.stroke]="threadColor" [attr.stroke-width]="threadWidth"/>
-  <circle [attr.cx]="loomDiameter/2" [attr.cy]="loomDiameter/2" [attr.r]="(loomDiameter/2) - (loomRimWidth/2)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" [attr.stroke-width]="loomRimWidth"/>
+  <circle *ngIf='isLoomTypeCircle' [attr.cx]="loomDiameter/2" [attr.cy]="loomDiameter/2" [attr.r]="(loomDiameter/2) - (loomRimWidth/2)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" [attr.stroke-width]="loomRimWidth"/>
+  <rect *ngIf='isLoomTypeRectangle' [attr.x]="0" [attr.y]="0" [attr.width]="loomDiameter" [attr.height]="loomDiameter" fill="none" stroke="#000" [attr.stroke-width]="loomRimWidth"/>
 </svg>
 <div class="p-inputgroup control-bar">  
   <button (click)="addIndex(-10)" pButton type="button" icon="pi pi-angle-double-left" class="p-button-secondary"></button>

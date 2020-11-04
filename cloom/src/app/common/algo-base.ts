@@ -10,6 +10,11 @@ export class AlgoHelpers {
   static pixelsCrossedByLine(startPos: Vector2, stopPos: Vector2): PixelValue[] {
     let returnValue: PixelValue[] = [];
 
+    // LMA LOG
+    //if (startPos.x == stopPos.x) console.log(startPos)
+    //if (startPos.x == stopPos.x) console.log(stopPos)
+
+
     let difference = new Vector2(
       stopPos.x - startPos.x,
       stopPos.y - startPos.y
@@ -19,9 +24,21 @@ export class AlgoHelpers {
     differenceUnit.x = differenceUnit.x / difference.length;
     differenceUnit.y = differenceUnit.y / difference.length;
 
+    // LMA LOG
+    //if (startPos.x == stopPos.x) {
+    //  console.log('differenceUnit')
+    //  console.log(differenceUnit)
+    //}
+
     let differenceTaxiCab = difference.clone();
     if (differenceTaxiCab.x != 0) differenceTaxiCab.x = differenceTaxiCab.x / Math.abs(differenceTaxiCab.x);
     if (differenceTaxiCab.y != 0) differenceTaxiCab.y = differenceTaxiCab.y / Math.abs(differenceTaxiCab.y);
+
+    // LMA LOG
+    //if (startPos.x == stopPos.x) {
+    //  console.log('differenceTaxiCab')
+    //  console.log(differenceTaxiCab)
+    //}
 
     let currentCursor = startPos.clone();
 
@@ -33,14 +50,28 @@ export class AlgoHelpers {
       );
 
       let hcRatio = (nextHorizontalCrossingPoint.y - currentCursor.y) / differenceUnit.y;
+      if (differenceUnit.y == 0) hcRatio = 1;
       nextHorizontalCrossingPoint.x = currentCursor.x + differenceUnit.x * hcRatio;
+
+      // LMA LOG
+      //if (startPos.x == stopPos.x) {
+      //  console.log('nextHorizontalCrossingPoint')
+      //  console.log(nextHorizontalCrossingPoint)
+      //}
 
       let nextVerticalCrossingPoint = new Vector2(
         differenceTaxiCab.x > 0 ? Math.floor(currentCursor.x + differenceTaxiCab.x) : Math.ceil(currentCursor.x + differenceTaxiCab.x),
         0
       );
       let vcRatio = (nextVerticalCrossingPoint.x - currentCursor.x) / differenceUnit.x;
+      if (differenceUnit.x == 0) vcRatio = 1;
       nextVerticalCrossingPoint.y = currentCursor.y + differenceUnit.y * vcRatio;
+
+      // LMA LOG
+      //if (startPos.x == stopPos.x) {
+      //  console.log('nextVerticalCrossingPoint')
+      //  console.log(nextVerticalCrossingPoint)
+      //}
 
       let distanceToNextHorizontalCrossingPoint = Vector2.distanceSquared(currentCursor, nextHorizontalCrossingPoint);
       let distanceToNextVerticalCrossingPoint = Vector2.distanceSquared(currentCursor, nextVerticalCrossingPoint);
@@ -57,7 +88,7 @@ export class AlgoHelpers {
       
       let average = Vector2.average(currentCursor, nextCurrentCursor);
 
-      returnValue.push(new PixelValue(new Vector2(Math.floor(average.x), Math.floor(average.y)), weight));
+      if (weight > 0.0001) returnValue.push(new PixelValue(new Vector2(Math.floor(average.x), Math.floor(average.y)), weight));
 
       if (distanceToEnd <= distanceToNextVerticalCrossingPoint && distanceToEnd <= distanceToNextHorizontalCrossingPoint) {
         break;
@@ -85,6 +116,47 @@ export class AlgoHelpers {
     return returnValue;
   }
 
+  static generatePinPositionsRectangle(nbPins: number, rimWidth: number, width: number, height: number): Vector2[] {
+
+    if (nbPins % 4 != 0) throw new Error('For a rectangle frame, the number of pins must be a multiple of 4');
+
+    let perimeter = 2 * width + 2 * height;
+    let delta = perimeter / nbPins;
+    let nbPinsWidth = width / delta;
+    let nbPinsHeigth = height / delta;
+
+    if (nbPinsWidth % 1 != 0 || nbPinsHeigth % 1 != 0) throw new Error('For a rectangle frame, the distance between the pins must be constant, and a pins must be in each corner');
+
+
+    let deltaVector: Vector2 = new Vector2(delta, 0);
+    let currentPin: Vector2 = new Vector2(0, 0);
+
+    let returnValue: Vector2[] = [];
+
+    for (let pinIndex = 0; pinIndex < nbPins; pinIndex++) {
+      let newPin = Vector2.clone(currentPin);
+
+      currentPin = Vector2.add(currentPin, deltaVector);
+      currentPin.x = AlgoHelpers.snapNumber(currentPin.x, 0);
+      currentPin.x = AlgoHelpers.snapNumber(currentPin.x, width);
+      currentPin.y = AlgoHelpers.snapNumber(currentPin.y, 0);
+      currentPin.y = AlgoHelpers.snapNumber(currentPin.y, -height);
+      
+      if (deltaVector.x > 0 && currentPin.x >= width) deltaVector = new Vector2(0, delta);
+      else if (deltaVector.y > 0 && currentPin.y >= height) deltaVector = new Vector2(-delta, 0);
+      else if (deltaVector.x < 0 && currentPin.x <= 0) deltaVector = new Vector2(0, -delta);
+
+      returnValue.push(newPin);
+    }
+
+    return returnValue;
+  }
+
+  static snapNumber(n: number, target: number) {
+    if (Math.abs(n - target) < 0.00001) return target;
+    else return n;
+  }
+
   static generatePossibleLines(pins: Vector2[], minDistance: number): LoomLine[] {
     let returnValue: LoomLine[] = [];
     for (let pinStartIndex = 0; pinStartIndex < pins.length - 1; pinStartIndex++) {
@@ -104,10 +176,36 @@ export class AlgoHelpers {
     return returnValue;
   }
 
+  static generatePossibleLinesRenctangle(pins: Vector2[], width: number, height: number): LoomLine[] {
+    let returnValue: LoomLine[] = [];
+    for (let pinStartIndex = 0; pinStartIndex < pins.length - 1; pinStartIndex++) {
+      for (let pinStopIndex = pinStartIndex + 1; pinStopIndex < pins.length; pinStopIndex++) {
+        if (!AlgoHelpers.isOnSameLine(pins[pinStartIndex], pins[pinStopIndex], width, height)) {
+          let newLoomLine = new LoomLine(pinStartIndex, pinStopIndex);
+
+          let startPos = pins[pinStartIndex].clone();
+          let stopPos = pins[pinStopIndex].clone();
+
+          newLoomLine.pixelsThrough = AlgoHelpers.pixelsCrossedByLine(startPos, stopPos);
+          returnValue.push(newLoomLine);
+        }
+      }
+    }
+
+    return returnValue;
+  }
+
   static distanceBetweenPins(pinStart: number, pinStop: number, nbPins: number): number {
     let distance = Math.abs(pinStart - pinStop);
 
     return Math.min(distance, Math.abs(distance - nbPins));
+  }
+
+  static isOnSameLine(pinStart: Vector2, pinStop: Vector2, width: number, height: number) {
+    return (
+      (pinStart.x == pinStop.x  && (pinStart.x == 0 || pinStart.x == width)) ||
+      (pinStart.y == pinStop.y  && (pinStart.y == 0 || pinStart.y == height))
+    );
   }
 
   static getIndexFromVector(pixelPosition: Vector2, referenceSize: number) {

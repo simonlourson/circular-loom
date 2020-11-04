@@ -5,7 +5,8 @@ import { FaceResponse, FaceInfo } from '../common/face-response';
 import { AlgoHelpers } from '../common/algo-base';
 import { OptionsDarkestLine, AlgoDarkestLine } from '../common/algo-darkest-line'
 import { OptionsMinimumError, AlgoMinimumError } from '../common/algo-minimum-error'
-import { LoomHelperComponent } from '../loom-helper/loom-helper.component';
+import { LoomHelperComponent, LoomType } from '../loom-helper/loom-helper.component';
+import { LoomLine } from '../common/loom-line';
 
 @Component({
   selector: 'app-algo-and-compare',
@@ -36,7 +37,7 @@ export class AlgoAndCompareComponent implements OnInit {
 
     this.image = new Image();
     this.image.onload = this.loadImage.bind(this);
-    this.image.src = '/assets/deep.png';
+    this.image.src = '/assets/marie.png'; 
   }
 
   loadImage() {
@@ -232,7 +233,8 @@ export class AlgoAndCompareComponent implements OnInit {
   }
   
 
-  loomDiameter:number = 800;
+  loomType: LoomType = LoomType.Rectangle;
+  loomDiameter:number = 450+25/2;
   loomRimWidth: number = 25;
   referenceImageSize: number = 200;
   nbPins: number = 200;
@@ -241,21 +243,40 @@ export class AlgoAndCompareComponent implements OnInit {
   errorWeightData: number[];
 
   minimumError() {
-    let pinReferenceCenter = new Vector2(this.referenceImageSize / 2, this.referenceImageSize / 2);
+    let pinCenter = new Vector2(this.loomDiameter / 2, this.loomDiameter / 2);
     let pinRadius = this.loomDiameter / 2 - this.loomRimWidth / 2;
+    let pinReferenceCenter = new Vector2(this.referenceImageSize / 2, this.referenceImageSize / 2);
     let pinReferenceRadius = pinRadius * this.referenceImageSize / this.loomDiameter;
-    let pinsReference = AlgoHelpers.generatePinPositions(this.nbPins, pinReferenceCenter, pinReferenceRadius);
+    let pins: Vector2[];
+    let pinsReference: Vector2[];
+    let possibleLines: LoomLine[]; 
+
+    if (this.loomType == LoomType.Circle) {
+      pins = AlgoHelpers.generatePinPositions(this.nbPins, pinCenter, pinRadius);
+      pinsReference = AlgoHelpers.generatePinPositions(this.nbPins, pinReferenceCenter, pinReferenceRadius);
+      possibleLines = AlgoHelpers.generatePossibleLines(pinsReference, 25);
+    }
+    else if (this.loomType == LoomType.Rectangle) {
+      pins = AlgoHelpers.generatePinPositionsRectangle(this.nbPins, 0, this.loomDiameter, this.loomDiameter);
+      //console.log(pins);
+      pinsReference = AlgoHelpers.generatePinPositionsRectangle(this.nbPins, 0, this.referenceImageSize, this.referenceImageSize);
+      //console.log(pinsReference);
+      possibleLines = AlgoHelpers.generatePossibleLinesRenctangle(pinsReference, this.referenceImageSize, this.referenceImageSize);
+      //console.log(possibleLines);
+    }
+
     let optionsMinimumError: OptionsMinimumError = {
       pins: pinsReference,
+      possibleLines: possibleLines,
       minDistanceBetweenPins: 25,
-      threadContrast: 13,
+      threadContrast: 17,
       referenceSize: this.referenceImageSize,
       referenceData: this.referenceData,
       errorWeightData: this.errorWeightData
     }
 
     this.loomHelper.reset();
-    
+    this.loomHelper.pins = pins;
     this.loomHelper.isAlgoRunning = true;
 
     let algoMinimumError = new AlgoMinimumError();
@@ -364,6 +385,10 @@ export class AlgoAndCompareComponent implements OnInit {
     a.href = URL.createObjectURL(new Blob([JSON.stringify({pinPath: this.loomHelper.pinPath})], {}));
     a.click();
     a.remove();
+  }
+
+  savePath() {
+    this.loomHelper.saveLoom();
   }
 
   reframe() {

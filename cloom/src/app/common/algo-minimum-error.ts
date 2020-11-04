@@ -23,7 +23,7 @@ export class AlgoMinimumError implements AlgoBase {
 
     setTimeout(() => {
       // Generate possible lines from the pins we got from the options
-      this.possibleLines = AlgoHelpers.generatePossibleLines(this.options.pins, this.options.minDistanceBetweenPins);
+      this.possibleLines = this.options.possibleLines;
 
       // Reset the line data
       this.lineData = [];
@@ -114,6 +114,7 @@ export class AlgoMinimumError implements AlgoBase {
 
 export class OptionsMinimumError {
   pins: Vector2[];
+  possibleLines: LoomLine[];
   minDistanceBetweenPins: number;
   threadContrast: number;
   referenceSize: number;

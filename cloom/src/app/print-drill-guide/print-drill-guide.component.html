@@ -1,1 +1,13 @@
-<p>print-drill-guide works!</p>
+<svg width="210mm" height="297mm" viewBox="0 0 210 297">
+  <path *ngFor="let boxPath of boxPaths; let index = index" [attr.d]="boxPath" [attr.fill]="boxFills[index]" stroke="#000" stroke-width="1pt"/>
+  <circle *ngFor="let nailCenter of nailCenters" [attr.cx]="nailCenter.x" [attr.cy]="nailCenter.y" r="1" fill="#FFF" stroke="#000" stroke-width="1pt"/>
+  <text *ngFor="let textValue of textValues; let index = index"
+    [attr.x]="textPositions[index].x"
+    [attr.y]="textPositions[index].y"
+    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:Consolas;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+    xml:space="preserve"><tspan
+      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4px;font-family:Consolas;-inkscape-font-specification:Consolas;stroke-width:0.264583"
+      [attr.x]="textPositions[index].x"
+      [attr.y]="textPositions[index].y"
+      sodipodi:role="line">{{textValue}}</tspan></text>
+</svg>

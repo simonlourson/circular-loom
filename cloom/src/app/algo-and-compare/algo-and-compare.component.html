@@ -32,9 +32,18 @@
   <p-button label="Run algorithm" (click)="minimumError()" [style]="{'width':'500px'}"></p-button>
 </div>
 <br>
-<app-loom-helper #loomHelper></app-loom-helper>
+<app-loom-helper 
+  #loomHelper
+  [loomType]='loomType'
+  [loomDiameter]='loomDiameter'
+  [loomRimWidth]='loomRimWidth'>
+</app-loom-helper>
 <br>
 <h1>Step four : Build the portrait</h1>
+<br>
+<div>
+  <p-button label="Save path" (click)="savePath()" [style]="{'width':'500px'}"></p-button>
+</div>
 <div class="wide-span">
   You can use the slider above to go to a specific instruction. Press play to start dictating instructions. Using the default speed, one instruction is played evry 4 seconds. For a portrait using 1500 arcs, the "looming" process should take about two hours.
 </div>
