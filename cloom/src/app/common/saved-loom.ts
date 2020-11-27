@@ -1,10 +1,12 @@
 
+import { LoomType } from '../loom-helper/loom-helper.component';
 import { Vector2 } from './vector2';
 
 export class SavedLoom {
   pins: Vector2[];
   pinPath: number[];
 
+  loomType: LoomType;
   loomDiameter: number;
   loomRimWidth: number
   threadColor: string;
@@ -20,6 +22,7 @@ export class SavedLoom {
     returnValue.loomRimWidth = original.loomRimWidth;
     returnValue.threadColor = original.threadColor;
     returnValue.threadWidth = original.threadWidth;
+    returnValue.loomType = original.loomType;
 
     return returnValue;
   }

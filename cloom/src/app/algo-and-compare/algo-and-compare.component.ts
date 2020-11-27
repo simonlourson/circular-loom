@@ -37,7 +37,7 @@ export class AlgoAndCompareComponent implements OnInit {
 
     this.image = new Image();
     this.image.onload = this.loadImage.bind(this);
-    this.image.src = '/assets/marie.png'; 
+    this.image.src = '/assets/louis.png'; 
   }
 
   loadImage() {
@@ -258,10 +258,25 @@ export class AlgoAndCompareComponent implements OnInit {
     }
     else if (this.loomType == LoomType.Rectangle) {
       pins = AlgoHelpers.generatePinPositionsRectangle(this.nbPins, 0, this.loomDiameter, this.loomDiameter);
+
+      /*
+      for (let index = 0; index < pins.length; index++) {
+        if (index == 100) continue;
+
+        let colinear = AlgoHelpers.colinear(100, index, pins);
+        if (colinear) console.log('pins 101 and ' + (index+1) + ' are colinear');
+        else console.log('pins 101 and ' + (index+1) + ' are not colinear');
+      }
+      */
+
       //console.log(pins);
       pinsReference = AlgoHelpers.generatePinPositionsRectangle(this.nbPins, 0, this.referenceImageSize, this.referenceImageSize);
       //console.log(pinsReference);
-      possibleLines = AlgoHelpers.generatePossibleLinesRenctangle(pinsReference, this.referenceImageSize, this.referenceImageSize);
+      possibleLines = AlgoHelpers.generatePossibleLinesRectangle(pinsReference, this.referenceImageSize, this.referenceImageSize);
+
+      //for (let line of possibleLines)
+      //  if (line.pinStart == 98 || line.pinStop == 98) console.log(line)
+
       //console.log(possibleLines);
     }
 
@@ -269,7 +284,7 @@ export class AlgoAndCompareComponent implements OnInit {
       pins: pinsReference,
       possibleLines: possibleLines,
       minDistanceBetweenPins: 25,
-      threadContrast: 17,
+      threadContrast: 13,
       referenceSize: this.referenceImageSize,
       referenceData: this.referenceData,
       errorWeightData: this.errorWeightData

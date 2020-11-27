@@ -176,11 +176,11 @@ export class AlgoHelpers {
     return returnValue;
   }
 
-  static generatePossibleLinesRenctangle(pins: Vector2[], width: number, height: number): LoomLine[] {
+  static generatePossibleLinesRectangle(pins: Vector2[], width: number, height: number): LoomLine[] {
     let returnValue: LoomLine[] = [];
     for (let pinStartIndex = 0; pinStartIndex < pins.length - 1; pinStartIndex++) {
       for (let pinStopIndex = pinStartIndex + 1; pinStopIndex < pins.length; pinStopIndex++) {
-        if (!AlgoHelpers.isOnSameLine(pins[pinStartIndex], pins[pinStopIndex], width, height)) {
+        if (!AlgoHelpers.colinear(pinStartIndex, pinStopIndex, pins)) {
           let newLoomLine = new LoomLine(pinStartIndex, pinStopIndex);
 
           let startPos = pins[pinStartIndex].clone();
@@ -206,6 +206,22 @@ export class AlgoHelpers {
       (pinStart.x == pinStop.x  && (pinStart.x == 0 || pinStart.x == width)) ||
       (pinStart.y == pinStop.y  && (pinStart.y == 0 || pinStart.y == height))
     );
+  }
+
+  static colinear(pinStartIndex: number, pinStopIndex: number, pins: Vector2[]) {
+
+    for (let index = 0; index < pins.length; index++) {
+      if (index == pinStartIndex || index == pinStopIndex) continue;
+
+      let v1 = pins[pinStartIndex];
+      let v2 = pins[pinStopIndex];
+      let v3 = pins[index];
+
+      let result = (v2.x-v1.x)*(v3.y-v1.y)-(v2.y-v1.y)*(v3.x-v1.x);
+      if (result == 0) return true;
+    }
+
+    return false;
   }
 
   static getIndexFromVector(pixelPosition: Vector2, referenceSize: number) {

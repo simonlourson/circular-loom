@@ -83,6 +83,10 @@ export class Vector2
       return new Vector2(v1.x * scale, v1.y * scale);
     }
 
+    static cross(v1: Vector2, v2: Vector2): number {
+      return (v1.x*v2.y) - (v1.y*v2.x);
+    }
+
     static cloneNullToZero(original: Vector2 | undefined): Vector2
     {
       if (original == null || original == undefined) return Vector2.zero();

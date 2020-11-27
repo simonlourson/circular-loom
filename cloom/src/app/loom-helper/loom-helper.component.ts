@@ -30,7 +30,7 @@ export class LoomHelperComponent implements OnInit {
   @Input() loomDiameter: number;
   @Input() loomRimWidth: number;
   quadraticError: number = 10;
-  threadColor: string = '#E000D1';
+  @Input() threadColor: string = '#E000D1';
   threadWidth: string = '.2';
   pins: Vector2[];
   path: string = '';
@@ -51,10 +51,10 @@ export class LoomHelperComponent implements OnInit {
   ngOnInit(): void {
 
     // LMA Log
-    let pinRectangle = AlgoHelpers.generatePinPositionsRectangle(12, 0, 3, 3);
-    console.log(pinRectangle);
-    let possibleLines = AlgoHelpers.generatePossibleLinesRenctangle(pinRectangle, 3, 3);
-    console.log(possibleLines);
+    //let pinRectangle = AlgoHelpers.generatePinPositionsRectangle(12, 0, 3, 3);
+    //console.log(pinRectangle);
+    //let possibleLines = AlgoHelpers.generatePossibleLinesRectangle(pinRectangle, 3, 3);
+    //console.log(possibleLines);
 
     this.initPins();
     this.audioInstructions = [];
@@ -72,6 +72,7 @@ export class LoomHelperComponent implements OnInit {
           this.loomRimWidth = savedLoom.loomRimWidth;
           this.threadColor = savedLoom.threadColor;
           this.threadWidth = savedLoom.threadWidth;
+          this.loomType = savedLoom.loomType;
 
           this.initInstructions();
           this.setToMax();
@@ -84,8 +85,8 @@ export class LoomHelperComponent implements OnInit {
   }
 
   getAudioInstruction(instruction: string) {
-    if (instruction == '0a') instruction = '200a';
-    else if (instruction == '0h') instruction = '200h';
+    //if (instruction == '0a') instruction = '200a';
+    //else if (instruction == '0h') instruction = '200h';
     
     let horaire: boolean = instruction.indexOf('h') != -1;
     let index = (horaire ? 0 : 200) + Number.parseInt(instruction.replace('a', '').replace('h', ''));
@@ -118,7 +119,7 @@ export class LoomHelperComponent implements OnInit {
   }
 
   playRecursiveWithDelay() {
-    setTimeout(this.playRecursive.bind(this), 3000);
+    setTimeout(this.playRecursive.bind(this), 2200); 
   }
 
   playRecursive() {
@@ -160,14 +161,15 @@ export class LoomHelperComponent implements OnInit {
     let tom = new SavedLoom();
     tom.pinPath = this.pinPath;
     tom.pins = this.pins;
-    tom.loomDiameter = 600;
-    tom.loomRimWidth = 20;
-    tom.threadColor = '#009';
-    tom.threadWidth = '.2';
+    tom.loomDiameter = this.loomDiameter;
+    tom.loomRimWidth = this.loomRimWidth;
+    tom.threadColor = this.threadColor;
+    tom.threadWidth = this.threadWidth;
+    tom.loomType = this.loomType;
 
     let a = document.createElement('a');
     document.body.append(a);
-    a.download = 'tom.json';
+    a.download = 'loom.json';
     a.href = URL.createObjectURL(new Blob([JSON.stringify(tom)], {}));
     a.click();
     a.remove();
@@ -176,7 +178,7 @@ export class LoomHelperComponent implements OnInit {
   initInstructions() {
     this.instructions = [];
     for (let index  = 0; index < this.pinPath.length; index++) {
-      if (index == 0 || index == this.pinPath.length - 1) this.instructions[index] = this.pinPath[index] + 'h';
+      if (index == 0 || index == this.pinPath.length - 1) this.instructions[index] = (this.pinPath[index]+1) + 'h';
       else {
         let pinIn: Vector2 = this.pins[this.pinPath[index - 1]];
         let pinCurrent: Vector2 = this.pins[this.pinPath[index]];
@@ -191,7 +193,7 @@ export class LoomHelperComponent implements OnInit {
         );
 
         let angle = Math.atan2(vectorIn.x*vectorOut.y-vectorIn.y*vectorOut.x,vectorIn.x*vectorOut.x+vectorIn.y*vectorOut.y);
-        this.instructions[index] = this.pinPath[index] + (angle < 0 ? 'h' : 'a');
+        this.instructions[index] = (this.pinPath[index]+1) + (angle < 0 ? 'h' : 'a');
       }
     }
   }
