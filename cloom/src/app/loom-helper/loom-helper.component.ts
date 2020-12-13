@@ -26,6 +26,7 @@ export class LoomHelperComponent implements OnInit {
 
   get totalLenghtForDisplay() { return this.totalLength.toFixed(2) + ' m' }
 
+  @Input() fileId: string;
   @Input() loomType: LoomType;
   @Input() loomDiameter: number;
   @Input() loomRimWidth: number;
@@ -59,28 +60,33 @@ export class LoomHelperComponent implements OnInit {
     this.initPins();
     this.audioInstructions = [];
 
-    this.route.params.subscribe((params: Params): void => {
+    if (this.fileId != undefined) this.loadFileId(this.fileId);
+    else this.route.params.subscribe((params: Params): void => {
       let path = params.id;
       if (path != undefined) {
-        fetch('/assets/' + path + '.json')
-        .then(response => { return response.json(); })
-        .then(json => {
-          let savedLoom = SavedLoom.copyFrom(json);
-          this.pins = savedLoom.pins;
-          this.pinPath = savedLoom.pinPath;
-          this.loomDiameter = savedLoom.loomDiameter;
-          this.loomRimWidth = savedLoom.loomRimWidth;
-          this.threadColor = savedLoom.threadColor;
-          this.threadWidth = savedLoom.threadWidth;
-          this.loomType = savedLoom.loomType;
-
-          this.initInstructions();
-          this.setToMax();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        this.loadFileId(path);
       }
+    });
+  }
+
+  loadFileId(fileId: string) {
+    fetch('/assets/' + fileId + '.json')
+    .then(response => { return response.json(); })
+    .then(json => {
+      let savedLoom = SavedLoom.copyFrom(json);
+      this.pins = savedLoom.pins;
+      this.pinPath = savedLoom.pinPath;
+      this.loomDiameter = savedLoom.loomDiameter;
+      this.loomRimWidth = savedLoom.loomRimWidth;
+      this.threadColor = savedLoom.threadColor;
+      this.threadWidth = savedLoom.threadWidth;
+      this.loomType = savedLoom.loomType;
+
+      this.initInstructions();
+      this.setToMax();
+    })
+    .catch((error) => {
+      console.log(error);
     });
   }
 

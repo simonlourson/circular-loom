@@ -37,7 +37,7 @@ export class AlgoAndCompareComponent implements OnInit {
 
     this.image = new Image();
     this.image.onload = this.loadImage.bind(this);
-    this.image.src = '/assets/louis.png'; 
+    this.image.src = '/assets/charles.png'; 
   }
 
   loadImage() {
@@ -284,7 +284,7 @@ export class AlgoAndCompareComponent implements OnInit {
       pins: pinsReference,
       possibleLines: possibleLines,
       minDistanceBetweenPins: 25,
-      threadContrast: 13,
+      threadContrast: 14,
       referenceSize: this.referenceImageSize,
       referenceData: this.referenceData,
       errorWeightData: this.errorWeightData

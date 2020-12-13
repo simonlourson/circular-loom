@@ -14,6 +14,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { PrintDrillGuideComponent } from './print-drill-guide/print-drill-guide.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoomHelperComponent } from './loom-helper/loom-helper.component';
+import { MultiLoomComponent } from './multi-loom/multi-loom.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { LoomHelperComponent } from './loom-helper/loom-helper.component';
     AppComponent,
     AlgoAndCompareComponent,
     PrintDrillGuideComponent,
-    LoomHelperComponent
+    LoomHelperComponent,
+    MultiLoomComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
