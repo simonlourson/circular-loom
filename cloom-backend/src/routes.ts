@@ -17,6 +17,7 @@ export class Routes {
       res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
 
+    /*
     let httpsAgent = new HttpsProxyAgent({host: "proxy-pc.na01.groupesigma.fr", port: "8080"});
     let config: AxiosRequestConfig = {
       method: 'post',
@@ -29,11 +30,14 @@ export class Routes {
       proxy: false
     }
     //axios(config).then((res) => console.log(res))
-    
+    */
   }
 
   public faces(req: Request, res: Response) 
   {
+    console.log('Routes.faces')
+    res.json({});
+    /*
     console.log('Routes.faces')
     if (process.env.ENV_NAME == 'never')
     {
@@ -55,5 +59,6 @@ export class Routes {
       }
       axios(config).then((faceRes) => res.json(faceRes.data))
     }
+    */
   }
 }
