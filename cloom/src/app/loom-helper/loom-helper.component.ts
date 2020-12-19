@@ -30,7 +30,7 @@ export class LoomHelperComponent implements OnInit {
   @Input() loomType: LoomType;
   @Input() loomDiameter: number;
   @Input() loomRimWidth: number;
-  quadraticError: number = 10;
+  quadraticError: number = 5;
   @Input() threadColor: string = '#E000D1';
   threadWidth: string = '.2';
   pins: Vector2[];
