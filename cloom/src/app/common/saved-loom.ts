@@ -10,6 +10,7 @@ export class SavedLoom {
   loomDiameter: number;
   loomRimWidth: number
   threadColor: string;
+  loomColor: string;
   threadWidth: string;
 
   static copyFrom(original: SavedLoom): SavedLoom {
@@ -21,6 +22,7 @@ export class SavedLoom {
     returnValue.loomDiameter = original.loomDiameter;
     returnValue.loomRimWidth = original.loomRimWidth;
     returnValue.threadColor = original.threadColor;
+    returnValue.loomColor = original.loomColor;
     returnValue.threadWidth = original.threadWidth;
     returnValue.loomType = original.loomType;
 

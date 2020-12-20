@@ -1,7 +1,20 @@
 <table>
-    <tr>
-        <td *ngFor="let fileId of fileIds">
-            <app-loom-helper [fileId]="fileId"></app-loom-helper>
-        </td>
-    </tr>
+  <tr>
+    <div class="row-container">
+      <app-loom-helper *ngFor="let fileId of fileIds; index as i" 
+        [fileId]="fileId" 
+        [shaveBorders]="getShaveArray(i)" 
+        [showUI]="false"
+        (pinPathLoaded)="pinPathLoaded($event)">
+      </app-loom-helper>
+    </div>
+  </tr>
+  <tr>
+    <div class="slider-padding">
+      <p-slider [(ngModel)]="currentRatio" (onChange)="changeRatio()" [min]="0" [max]="maxPinPathLength" [disabled]="true"></p-slider>
+    </div>
+  </tr>
+  <tr>
+    <button class="full-length-button" (click)="replay()" pButton type="button" label="Replay !" [disabled]="replayDisabled"></button>
+  </tr>
 </table>

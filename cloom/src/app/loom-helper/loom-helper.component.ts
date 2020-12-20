@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Vector2 } from '../common/vector2';
 import { SavedLoom } from '../common/saved-loom';
 import { AlgoHelpers } from '../common/algo-base';
@@ -26,12 +26,16 @@ export class LoomHelperComponent implements OnInit {
 
   get totalLenghtForDisplay() { return this.totalLength.toFixed(2) + ' m' }
 
+  @Input() showUI: boolean = true;
   @Input() fileId: string;
   @Input() loomType: LoomType;
   @Input() loomDiameter: number;
   @Input() loomRimWidth: number;
-  quadraticError: number = 5;
   @Input() threadColor: string = '#E000D1';
+  @Input() loomColor: string = '#A98C6B';
+  @Input() shaveBorders: boolean[] = [false, false, false, false];
+  @Output() pinPathLoaded = new EventEmitter<number>();
+  quadraticError: number = 5;
   threadWidth: string = '.2';
   pins: Vector2[];
   path: string = '';
@@ -40,7 +44,22 @@ export class LoomHelperComponent implements OnInit {
 
   get viewBox(): string { 
     if (this.loomType == LoomType.Circle) return '0 0 ' + this.loomDiameter + ' ' + this.loomDiameter;
-    else if (this.loomType == LoomType.Rectangle) return '0 0 ' + this.loomDiameter + ' ' + this.loomDiameter;
+    else if (this.loomType == LoomType.Rectangle) {
+      let shaveTop = this.shaveBorders[0];
+      let shaveBottom = this.shaveBorders[1];
+      let shaveLeft = this.shaveBorders[2];
+      let shaveRight = this.shaveBorders[3];
+      let left = shaveLeft ? 0 : (-this.loomRimWidth/2);
+      let top = shaveTop ? 0 : (-this.loomRimWidth/2);
+      let right = this.loomDiameter + this.loomRimWidth;
+      if (shaveLeft) right -= this.loomRimWidth / 2;
+      if (shaveRight) right -= this.loomRimWidth / 2;
+      let bottom = this.loomDiameter + this.loomRimWidth;
+      if (shaveTop) bottom -= this.loomRimWidth / 2;
+      if (shaveBottom) right -= this.loomRimWidth / 2;
+
+      return left+' '+top+' '+right+' '+bottom;
+    }
     else throw new Error('Unknown loom type');
   }
 
@@ -79,11 +98,14 @@ export class LoomHelperComponent implements OnInit {
       this.loomDiameter = savedLoom.loomDiameter;
       this.loomRimWidth = savedLoom.loomRimWidth;
       this.threadColor = savedLoom.threadColor;
+      this.loomColor = savedLoom.loomColor;
       this.threadWidth = savedLoom.threadWidth;
       this.loomType = savedLoom.loomType;
 
       this.initInstructions();
       this.setToMax();
+      if (this.pinPathLoaded != undefined) this.pinPathLoaded.emit(this.pinPath.length);
+      
     })
     .catch((error) => {
       console.log(error);
@@ -109,6 +131,10 @@ export class LoomHelperComponent implements OnInit {
 
     if (this.currentPin < 0) this.currentPin = 0;
     if (this.currentPin >= this.pinPath.length) this.currentPin = this.pinPath.length - 1;
+  }
+
+  setIndex(currentPin: number) {
+    this.currentPin = currentPin;
   }
 
   get canPressPlay() { return !this.isAlgoRunning && this.instructions != undefined && this.instructions.length > 0 }
@@ -273,6 +299,11 @@ export class LoomHelperComponent implements OnInit {
     if (instruction.indexOf('a') != -1) returnValue = returnValue + instruction.replace('a', ' dans le sens anti-horaire');
     else if (instruction.indexOf('h') != -1) returnValue = returnValue + instruction.replace('h', ' dans le sens horaire');
     return returnValue;
+  }
+
+  updateToRatio(ratio: number) {
+    let currentPin = Math.floor(this.pinPath.length * ratio);
+    this.setIndex(currentPin);
   }
 
 }
