@@ -604,7 +604,8 @@
     ],
     "loomDiameter": 462.5,
     "loomRimWidth": 25,
-    "threadColor": "#E000D1",
+    "threadColor": "#FF2D69",
+    "loomColor": "#B89980",
     "threadWidth": ".2",
     "loomType": 1
 }
