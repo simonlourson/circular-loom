@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewContainerRef, ChangeDetectorRef, ChangeDetectionStrategy, ApplicationRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Vector2 } from '../common/vector2';
-import { FaceResponse, FaceInfo } from '../common/face-response';
-import { AlgoHelpers } from '../common/algo-base';
-import { OptionsDarkestLine, AlgoDarkestLine } from '../common/algo-darkest-line'
-import { OptionsMinimumError, AlgoMinimumError } from '../common/algo-minimum-error'
-import { LoomHelperComponent, LoomType } from '../loom-helper/loom-helper.component';
-import { LoomLine } from '../common/loom-line';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { LoomHelperComponent } from '../loom-helper/loom-helper.component';
+import { Vector2 } from '../../common/vector2';
+import { FaceInfo, FaceResponse } from '../../common/face-response';
+import { LoomLine } from '../../common/loom-line';
+import { AlgoHelpers } from '../../common/algo-base';
+import { AlgoMinimumError, OptionsMinimumError } from '../../common/algo-minimum-error';
+import { LoomType } from 'src/app/common/saved-loom';
+
 
 @Component({
   selector: 'app-algo-and-compare',

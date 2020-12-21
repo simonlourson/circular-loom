@@ -1,5 +1,4 @@
 
-import { LoomType } from '../loom-helper/loom-helper.component';
 import { Vector2 } from './vector2';
 
 export class SavedLoom {
@@ -28,4 +27,9 @@ export class SavedLoom {
 
     return returnValue;
   }
+}
+
+export enum LoomType {
+  Circle,
+  Rectangle
 }

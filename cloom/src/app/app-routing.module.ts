@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AlgoAndCompareComponent } from './algo-and-compare/algo-and-compare.component';
-import { PrintDrillGuideComponent } from './print-drill-guide/print-drill-guide.component';
-import { LoomHelperComponent } from './loom-helper/loom-helper.component';
-import { MultiLoomComponent } from './multi-loom/multi-loom.component';
+import { AlgoAndCompareComponent } from './components/algo-and-compare/algo-and-compare.component';
+import { PrintDrillGuideComponent } from './components/print-drill-guide/print-drill-guide.component';
+import { LoomHelperComponent } from './components/loom-helper/loom-helper.component';
+import { MultiLoomComponent } from './components/multi-loom/multi-loom.component';
 
 const routes: Routes = [
   {

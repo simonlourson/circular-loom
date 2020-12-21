@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Vector2 } from '../common/vector2';
-import { LoomType } from '../loom-helper/loom-helper.component';
+import { LoomType } from 'src/app/common/saved-loom';
+import { Vector2 } from '../../common/vector2';
 
 @Component({
   selector: 'app-print-drill-guide',

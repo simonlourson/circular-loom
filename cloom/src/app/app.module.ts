@@ -5,16 +5,17 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AlgoAndCompareComponent } from './algo-and-compare/algo-and-compare.component';
+import { AlgoAndCompareComponent } from './components/algo-and-compare/algo-and-compare.component';
 
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { PrintDrillGuideComponent } from './print-drill-guide/print-drill-guide.component';
+import { PrintDrillGuideComponent } from './components/print-drill-guide/print-drill-guide.component';
 import { HttpClientModule } from '@angular/common/http';
-import { LoomHelperComponent } from './loom-helper/loom-helper.component';
-import { MultiLoomComponent } from './multi-loom/multi-loom.component';
+import { LoomHelperComponent } from './components/loom-helper/loom-helper.component';
+import { MultiLoomComponent } from './components/multi-loom/multi-loom.component';
+import { ImageUploaderComponent } from './app/components/image-uploader/image-uploader.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { MultiLoomComponent } from './multi-loom/multi-loom.component';
     AlgoAndCompareComponent,
     PrintDrillGuideComponent,
     LoomHelperComponent,
-    MultiLoomComponent
+    MultiLoomComponent,
+    ImageUploaderComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

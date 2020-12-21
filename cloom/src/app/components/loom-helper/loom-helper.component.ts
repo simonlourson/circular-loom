@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Vector2 } from '../common/vector2';
-import { SavedLoom } from '../common/saved-loom';
-import { AlgoHelpers } from '../common/algo-base';
+import { Vector2 } from '../../common/vector2';
+import { LoomType, SavedLoom } from '../../common/saved-loom';
 import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
@@ -308,7 +307,4 @@ export class LoomHelperComponent implements OnInit {
 
 }
 
-export enum LoomType {
-  Circle,
-  Rectangle
-}
+
