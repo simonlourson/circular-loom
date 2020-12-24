@@ -6,6 +6,7 @@ sudo /opt/bitnami/ctlscript.sh restart apache
 
 cd /home/bitnami/circular-loom/cloom-backend
 forever start -e ../logs/err_20201219.log -o ../logs/out_20201219.log build/server.js
+forever start build/server.js
 
 bitnami@ip-172-26-4-86:/opt/bitnami/letsencrypt/certificates$ ls
 filunique.com.crt  filunique.com.issuer.crt  filunique.com.json  filunique.com.key
@@ -15,3 +16,6 @@ filunique.com.crt  filunique.com.issuer.crt  filunique.com.json  filunique.com.k
 
 cd cd /opt/bitnami/apache/conf/vhosts/
 vi sample-https-vhost.conf
+
+ps -ef | grep server
+kill 2041

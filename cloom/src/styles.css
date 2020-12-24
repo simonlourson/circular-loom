@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+.p-disable-slider-color.p-slider .p-slider-range {
+  background:#dee2e6 !important;
+}
+
+.p-disable-slider-color.p-slider {
+  background:#dee2e6 !important;
+}
+
+.full-length-dropdown {
+  width: 100%;
+}
+
+.full-length-button {
+  width: 100%;
+}

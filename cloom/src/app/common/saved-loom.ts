@@ -33,3 +33,8 @@ export enum LoomType {
   Circle,
   Rectangle
 }
+
+export interface LoomTypeWithLabel {
+  loomType: LoomType;
+  loomLabel: string;
+}

@@ -1,0 +1,29 @@
+canvas {
+  width: 500px;
+  height: 500px;
+}
+
+table, tr, td {
+  border: 0px;
+  border-spacing:0px;
+  border-width:0px; 
+  padding:0px; 
+  margin:0px; 
+}
+
+
+.flex-outer li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 1em;
+}
+
+.flex-outer > li > label {
+  flex: 1 0;
+}
+ 
+.flex-outer > li > label + * {
+  flex: 2 0;
+}

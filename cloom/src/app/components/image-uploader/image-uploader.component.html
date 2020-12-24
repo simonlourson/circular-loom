@@ -1,1 +1,32 @@
-<p>image-uploader works!</p>
+
+
+<table>
+  <tr>
+    <canvas 
+      #previewcanvas 
+      (dragover)="dragOverHandler($event)"
+      (dragleave)="dragLeaveHandler($event)"
+      (drop)="dropHandler($event)"
+      >
+    </canvas>
+  </tr>
+  <tr>
+    <button class="full-length-button" (click)="uploadImage()" pButton type="button" label="Upload image" [disabled]=""></button>
+  </tr>
+  <tr>
+    <div class="flex-outer">
+      <li>
+        <label class="p-component">Zoom</label>
+        <p-slider styleClass="p-disable-slider-color" [(ngModel)]="currentZoom" (onChange)="changeZoom()" [min]="-3" [max]="3" [step]="0.1"  [disabled]="false"></p-slider>
+      </li>
+      <li>
+        <label class="p-component">Type de canevas</label>
+        <p-dropdown styleClass="full-length-dropdown" [options]="loomTypes" [(ngModel)]="selectedLoomType" optionLabel="loomLabel"></p-dropdown>
+      </li>
+      <li *ngIf="selectedLoomType.loomType == 0">
+        <label class="p-component">Diamètre</label>
+        <p-dropdown styleClass="full-length-dropdown" [options]="diameterSizes" [(ngModel)]="selectedDiameter" optionLabel="label" (onChange)="changeDiameter()"></p-dropdown>
+      </li>
+    </div>
+  </tr>
+</table>
