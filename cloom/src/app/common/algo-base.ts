@@ -100,22 +100,6 @@ export class AlgoHelpers {
     return returnValue;
   }
 
-  static generatePinPositions(nbPins: number, center: Vector2, radius: number): Vector2[] {
-    let returnValue: Vector2[] = [];
-
-    for (let pinIndex = 0; pinIndex < nbPins; pinIndex++) {
-      let angle = Math.PI * 2 * pinIndex / nbPins;
-      let newPin = new Vector2(
-        center.x + Math.cos(angle) * radius,
-        center.y + Math.sin(angle) * radius
-      );
-
-      returnValue.push(newPin);
-    }
-
-    return returnValue;
-  }
-
   static generatePinPositionsRectangle(nbPins: number, rimWidth: number, width: number, height: number): Vector2[] {
 
     if (nbPins % 4 != 0) throw new Error('For a rectangle frame, the number of pins must be a multiple of 4');
@@ -155,25 +139,6 @@ export class AlgoHelpers {
   static snapNumber(n: number, target: number) {
     if (Math.abs(n - target) < 0.00001) return target;
     else return n;
-  }
-
-  static generatePossibleLines(pins: Vector2[], minDistance: number): LoomLine[] {
-    let returnValue: LoomLine[] = [];
-    for (let pinStartIndex = 0; pinStartIndex < pins.length - 1; pinStartIndex++) {
-      for (let pinStopIndex = pinStartIndex + 1; pinStopIndex < pins.length; pinStopIndex++) {
-        if (AlgoHelpers.distanceBetweenPins(pinStartIndex, pinStopIndex, pins.length) >= minDistance) {
-          let newLoomLine = new LoomLine(pinStartIndex, pinStopIndex);
-
-          let startPos = pins[pinStartIndex].clone();
-          let stopPos = pins[pinStopIndex].clone();
-
-          newLoomLine.pixelsThrough = AlgoHelpers.pixelsCrossedByLine(startPos, stopPos)
-          returnValue.push(newLoomLine);
-        }
-      }
-    }
-
-    return returnValue;
   }
 
   static generatePossibleLinesRectangle(pins: Vector2[], width: number, height: number): LoomLine[] {

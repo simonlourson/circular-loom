@@ -1,5 +1,5 @@
 <svg *ngIf='isLoomTypeCircle || isLoomTypeRectangle' preserveAspectRatio="none" width="500px" height="500px" version="1.1" [attr.viewBox]="viewBox" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <circle *ngIf='isLoomTypeCircle' [attr.cx]="loomDiameter/2" [attr.cy]="loomDiameter/2" [attr.r]="(loomDiameter/2) - (loomRimWidth/2)" fill="none" [attr.stroke]="loomColor" stroke-linecap="round" stroke-linejoin="round" [attr.stroke-width]="loomRimWidth"/>
+  <circle *ngIf='isLoomTypeCircle' [attr.cx]="loomDiameter/2" [attr.cy]="loomDiameter/2" [attr.r]="loomDiameter/2" fill="none" [attr.stroke]="loomColor" stroke-linecap="round" stroke-linejoin="round" [attr.stroke-width]="loomRimWidth"/>
   <rect *ngIf='isLoomTypeRectangle' [attr.x]="0" [attr.y]="0" [attr.width]="loomDiameter" [attr.height]="loomDiameter" fill="none" [attr.stroke]="loomColor" [attr.stroke-width]="loomRimWidth"/>
   <path [attr.d]="path" fill="none" [attr.stroke]="threadColor" [attr.stroke-width]="threadWidth"/>
   <circle *ngFor="let pin of pins" [attr.cx]="pin.x" [attr.cy]="pin.y" r="2" fill="#C2C2C2" stroke="none"/>

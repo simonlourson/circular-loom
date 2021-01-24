@@ -1,7 +1,9 @@
 import { AlgoBase, AlgoHelpers } from "./algo-base";
 import { LoomLine } from "./loom-line";
+import { ILoom } from "./loom/i-loom";
 import { Vector2 } from './vector2';
 import { Observable } from 'rxjs';
+import { ImageUploaderComponent } from '../components/image-uploader/image-uploader.component';
 
 export class AlgoMinimumError implements AlgoBase {
 
@@ -18,12 +20,14 @@ export class AlgoMinimumError implements AlgoBase {
 
   runAlgo(nextPin: (pin: number) => void) {
 
-    this.currentPin = Math.floor(Math.random() * this.options.pins.length);
+    this.currentPin = Math.floor(Math.random() * this.options.loom.pins.length);
     nextPin(this.currentPin);
 
     setTimeout(() => {
       // Generate possible lines from the pins we got from the options
-      this.possibleLines = this.options.possibleLines;
+      this.possibleLines = []
+      for (let possibleLine of this.options.loom.loomLines)
+        this.possibleLines.push(LoomLine.clone(possibleLine));
 
       // Reset the line data
       this.lineData = [];
@@ -73,7 +77,7 @@ export class AlgoMinimumError implements AlgoBase {
 
         // The error delta, the higher, the better the line. If this is negative, drawing the line will make the final picture worse
         let errorDelta = currentError - tentativeError;
-        let errorWeight = (this.options.errorWeightData[pixelIndex] / 255) * 1 + 1;
+        let errorWeight = (this.options.errorWeightData[pixelIndex] / 255) * 2 + 1;
         errorDeltas[lineIndex] += errorDelta * pixel.weight * errorWeight;
 
         totalWeight += pixel.weight;
@@ -85,7 +89,7 @@ export class AlgoMinimumError implements AlgoBase {
     }
 
     let returnValue = -1;
-    let startIndex = Math.floor(Math.random() * this.options.pins.length);
+    let startIndex = Math.floor(Math.random() * this.options.loom.pins.length);
     for (let lineIndexRandom = startIndex; lineIndexRandom < this.possibleLines.length + startIndex; lineIndexRandom++) {
       let lineIndex = lineIndexRandom % this.possibleLines.length;
       if (errorDeltas[lineIndex] == highestErrorDelta && highestErrorDelta > 0) returnValue =  lineIndex;
@@ -113,9 +117,7 @@ export class AlgoMinimumError implements AlgoBase {
 }
 
 export class OptionsMinimumError {
-  pins: Vector2[];
-  possibleLines: LoomLine[];
-  minDistanceBetweenPins: number;
+  loom: ILoom;
   threadContrast: number;
   referenceSize: number;
   referenceData: number[];

@@ -1,6 +1,11 @@
-canvas {
+.preview-canvas {
   width: 500px;
   height: 500px;
+}
+
+.reference-canvas {
+  width: 200px;
+  height: 200px;
 }
 
 table, tr, td {
@@ -11,6 +16,20 @@ table, tr, td {
   margin:0px; 
 }
 
+.colorSquare {
+  width: 20px;
+  height: 20px;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  margin-right: 1em;
+}
+
+.color-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
 
 .flex-outer li {
   display: flex;

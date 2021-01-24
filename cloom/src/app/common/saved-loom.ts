@@ -7,7 +7,7 @@ export class SavedLoom {
 
   loomType: LoomType;
   loomDiameter: number;
-  loomRimWidth: number
+  loomRimWidth: number;
   threadColor: string;
   loomColor: string;
   threadWidth: string;
@@ -15,8 +15,6 @@ export class SavedLoom {
   static copyFrom(original: SavedLoom): SavedLoom {
     let returnValue = new SavedLoom();
 
-    returnValue.pins = [];
-    for (let pin of original.pins) returnValue.pins.push(Vector2.clone(pin));
     returnValue.pinPath = original.pinPath;
     returnValue.loomDiameter = original.loomDiameter;
     returnValue.loomRimWidth = original.loomRimWidth;
@@ -24,6 +22,12 @@ export class SavedLoom {
     returnValue.loomColor = original.loomColor;
     returnValue.threadWidth = original.threadWidth;
     returnValue.loomType = original.loomType;
+
+    returnValue.pins = [];
+    if (original.pins != undefined) {
+      for (let pin of original.pins) 
+        returnValue.pins.push(Vector2.clone(pin));
+    }
 
     return returnValue;
   }

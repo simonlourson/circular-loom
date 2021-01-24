@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Vector2 } from '../../common/vector2';
 import { LoomType, SavedLoom } from '../../common/saved-loom';
 import { ActivatedRoute, Params } from '@angular/router';
+import { AlgoHelpers } from 'src/app/common/algo-base';
 
 @Component({
   selector: 'app-loom-helper',
@@ -42,24 +43,20 @@ export class LoomHelperComponent implements OnInit {
   quadraticBezierCurveToRemember: Vector2[];
 
   get viewBox(): string { 
-    if (this.loomType == LoomType.Circle) return '0 0 ' + this.loomDiameter + ' ' + this.loomDiameter;
-    else if (this.loomType == LoomType.Rectangle) {
-      let shaveTop = this.shaveBorders[0];
-      let shaveBottom = this.shaveBorders[1];
-      let shaveLeft = this.shaveBorders[2];
-      let shaveRight = this.shaveBorders[3];
-      let left = shaveLeft ? 0 : (-this.loomRimWidth/2);
-      let top = shaveTop ? 0 : (-this.loomRimWidth/2);
-      let right = this.loomDiameter + this.loomRimWidth;
-      if (shaveLeft) right -= this.loomRimWidth / 2;
-      if (shaveRight) right -= this.loomRimWidth / 2;
-      let bottom = this.loomDiameter + this.loomRimWidth;
-      if (shaveTop) bottom -= this.loomRimWidth / 2;
-      if (shaveBottom) right -= this.loomRimWidth / 2;
+    let shaveTop = this.shaveBorders[0];
+    let shaveBottom = this.shaveBorders[1];
+    let shaveLeft = this.shaveBorders[2];
+    let shaveRight = this.shaveBorders[3];
+    let left = shaveLeft ? 0 : (-this.loomRimWidth/2);
+    let top = shaveTop ? 0 : (-this.loomRimWidth/2);
+    let right = this.loomDiameter + this.loomRimWidth;
+    if (shaveLeft) right -= this.loomRimWidth / 2;
+    if (shaveRight) right -= this.loomRimWidth / 2;
+    let bottom = this.loomDiameter + this.loomRimWidth;
+    if (shaveTop) bottom -= this.loomRimWidth / 2;
+    if (shaveBottom) right -= this.loomRimWidth / 2;
 
-      return left+' '+top+' '+right+' '+bottom;
-    }
-    else throw new Error('Unknown loom type');
+    return left+' '+top+' '+right+' '+bottom;
   }
 
   get isLoomTypeCircle(): boolean { return this.loomType == LoomType.Circle; }
@@ -92,7 +89,6 @@ export class LoomHelperComponent implements OnInit {
     .then(response => { return response.json(); })
     .then(json => {
       let savedLoom = SavedLoom.copyFrom(json);
-      this.pins = savedLoom.pins;
       this.pinPath = savedLoom.pinPath;
       this.loomDiameter = savedLoom.loomDiameter;
       this.loomRimWidth = savedLoom.loomRimWidth;
@@ -100,6 +96,14 @@ export class LoomHelperComponent implements OnInit {
       this.loomColor = savedLoom.loomColor;
       this.threadWidth = savedLoom.threadWidth;
       this.loomType = savedLoom.loomType;
+      
+      this.pins = savedLoom.pins;
+      //if (this.pins.length == 0) {
+      //  console.log('recreate pins');
+      //  let center = this.loomDiameter / 2
+      //  this.pins = AlgoHelpers.generatePinPositions(200, new Vector2(center, center), this.loomDiameter / 2);
+      //  console.log(JSON.stringify(this.pins));
+      //}
 
       this.initInstructions();
       this.setToMax();

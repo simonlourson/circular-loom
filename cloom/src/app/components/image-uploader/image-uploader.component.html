@@ -1,32 +1,89 @@
 
 
+
 <table>
   <tr>
-    <canvas 
-      #previewcanvas 
-      (dragover)="dragOverHandler($event)"
-      (dragleave)="dragLeaveHandler($event)"
-      (drop)="dropHandler($event)"
-      >
-    </canvas>
+    <td>
+      <canvas [hidden]="!showImage" class="preview-canvas"
+        #previewcanvas 
+        (dragover)="dragOverHandler($event)"
+        (dragleave)="dragLeaveHandler($event)"
+        (drop)="dropHandler($event)"
+        >
+      </canvas>
+      <app-loom-helper [hidden]="showImage"
+        #loomHelper
+        [showUI]="false"
+        [loomType]="selectedLoomType.loomType"
+        [loomDiameter]="loomCommonSize.size"
+        [loomRimWidth]="loomCommonSize.rimWidth"
+        [threadColor]="selectedThreadColor.color">
+      </app-loom-helper>
+    </td>
+    <td>&nbsp;</td>
+    <td>
+    </td>
   </tr>
   <tr>
-    <button class="full-length-button" (click)="uploadImage()" pButton type="button" label="Upload image" [disabled]=""></button>
-  </tr>
-  <tr>
-    <div class="flex-outer">
-      <li>
-        <label class="p-component">Zoom</label>
-        <p-slider styleClass="p-disable-slider-color" [(ngModel)]="currentZoom" (onChange)="changeZoom()" [min]="-3" [max]="3" [step]="0.1"  [disabled]="false"></p-slider>
-      </li>
-      <li>
-        <label class="p-component">Type de canevas</label>
-        <p-dropdown styleClass="full-length-dropdown" [options]="loomTypes" [(ngModel)]="selectedLoomType" optionLabel="loomLabel"></p-dropdown>
-      </li>
-      <li *ngIf="selectedLoomType.loomType == 0">
-        <label class="p-component">Diamètre</label>
-        <p-dropdown styleClass="full-length-dropdown" [options]="diameterSizes" [(ngModel)]="selectedDiameter" optionLabel="label" (onChange)="changeDiameter()"></p-dropdown>
-      </li>
-    </div>
+    <td>
+      <div class="flex-outer">
+        <li>
+          <button class="full-length-button" (click)="clickSwitch()" pButton type="button" label="Switch" ></button>
+        </li>
+        <li>
+          <button class="full-length-button" (click)="clickUpload()" pButton type="button" label="Upload image" ></button>
+        </li>
+        <li>
+          <button class="full-length-button" (click)="runAlgorithm()" pButton type="button" label="Run Algorithm" [disabled]=""></button>
+        </li>
+        <li>
+          <label class="p-component">Zoom : {{realZoom | number:'1.0-2'}}</label>
+          <p-slider styleClass="p-disable-slider-color" [(ngModel)]="currentZoom" (onChange)="changeZoom()" [min]="-3" [max]="3" [step]="0.1"  [disabled]="false"></p-slider>
+        </li>
+        <li>
+          <label class="p-component">Type de canevas</label>
+          <p-dropdown styleClass="full-length-dropdown" [options]="loomTypes" [(ngModel)]="selectedLoomType" optionLabel="loomLabel" (onChange)="changeLoomType()"></p-dropdown>
+        </li>
+        <li *ngIf="isLoomTypeCircular">
+          <label class="p-component">Diamètre</label>
+          <p-dropdown styleClass="full-length-dropdown" [options]="diameterSizes" [(ngModel)]="selectedDiameter" optionLabel="label" (onChange)="changeDiameter()"></p-dropdown>
+        </li>
+        <li *ngIf="isLoomTypeSquare">
+          <label class="p-component">Taille du carré</label>
+          <p-dropdown styleClass="full-length-dropdown" [options]="squareSizes" [(ngModel)]="selectedSquareSize" optionLabel="label" (onChange)="changeSquareSize()"></p-dropdown>
+        </li>
+        <li>
+          <label class="p-component">Nombre de points</label>
+          <p-dropdown styleClass="full-length-dropdown" [options]="numberOfNails" [(ngModel)]="selectedNumberOfNails" optionLabel="label"></p-dropdown>
+        </li>
+        <li>
+          <label class="p-component">Luminosité : {{currentBrightness}}</label>
+          <p-slider styleClass="p-disable-slider-color" [(ngModel)]="currentBrightness" [min]="10" [max]="25" [step]="0.1"  [disabled]="false"></p-slider>
+        </li>
+        <li>
+          <label class="p-component">Couleur de fil</label>
+          <p-dropdown styleClass="full-length-dropdown" [options]="threadColors" [(ngModel)]="selectedThreadColor" optionLabel="colorName" (onChange)="changeLoomType()">
+            <ng-template pTemplate="selectedItem">
+              <div class="color-item">
+                  <div class="colorSquare" [ngStyle]="{'background-color': selectedThreadColor.color}"></div>
+                  <div>{{selectedThreadColor.colorName}}</div>
+              </div>
+            </ng-template>
+            <ng-template let-color pTemplate="item">
+              <div class="color-item">
+                  <div class="colorSquare" [ngStyle]="{'background-color': color.value.color}"></div>
+                  <div>{{color.value.colorName}}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </li>
+      </div>
+    </td>
+    <td>&nbsp;</td>
+    <td>
+      <div class="flex-outer">
+      </div>
+    </td>
   </tr>
 </table>
+<input type="file" id="pictureUploader" accept="image/png, image/jpeg" style="display: none" (change)="upload()">
