@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AlgoAndCompareComponent } from './components/algo-and-compare/algo-and-compare.component';
 
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
@@ -29,7 +28,6 @@ import { ImageUploaderComponent } from './components/image-uploader/image-upload
   ],
   declarations: [
     AppComponent,
-    AlgoAndCompareComponent,
     PrintDrillGuideComponent,
     LoomHelperComponent,
     MultiLoomComponent,

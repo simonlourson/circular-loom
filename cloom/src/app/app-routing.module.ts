@@ -1,16 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AlgoAndCompareComponent } from './components/algo-and-compare/algo-and-compare.component';
 import { PrintDrillGuideComponent } from './components/print-drill-guide/print-drill-guide.component';
 import { LoomHelperComponent } from './components/loom-helper/loom-helper.component';
 import { MultiLoomComponent } from './components/multi-loom/multi-loom.component';
 import { ImageUploaderComponent } from './components/image-uploader/image-uploader.component';
 
 const routes: Routes = [
-  {
-    path: 'algo',
-    component: AlgoAndCompareComponent
-  },
   {
     path: 'preview',
     component: ImageUploaderComponent
@@ -28,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'algo'
+    redirectTo: 'preview'
   }
 ];
 

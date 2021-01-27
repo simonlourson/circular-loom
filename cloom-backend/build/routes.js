@@ -12,6 +12,7 @@ var Routes = /** @class */ (function () {
     Routes.prototype.routes = function (app) {
         //app.use(raw({type: 'application/octet-stream', limit : '2mb'}));
         app.route("/face/*").post(this.faces);
+        app.route("/talend/statuses").post(this.statuses);
         app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
         app.get('*', function (req, res) {
             res.sendFile(path_1.default.join(__dirname, 'public', 'index.html'));
@@ -30,6 +31,12 @@ var Routes = /** @class */ (function () {
         }
         //axios(config).then((res) => console.log(res))
         */
+    };
+    Routes.prototype.statuses = function (req, res) {
+        console.log('Routes.statuses');
+        console.log(req.body);
+        console.log(req.headers);
+        res.json({});
     };
     Routes.prototype.faces = function (req, res) {
         console.log('Routes.faces');

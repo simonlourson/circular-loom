@@ -13,42 +13,91 @@ export class LoomRectangle implements ILoom {
   constructor(nbPins: number, loomRimWidth: number, referenceSize: Vector2, realSize: Vector2) {
     this.loomRimWidth = loomRimWidth;
 
-    this.pins = this.generatePinPositions(nbPins, realSize.x, realSize.y);
-    this.pinsReference = this.generatePinPositions(nbPins, referenceSize.x, referenceSize.y);
+    this.pins = this.generatePinPositions(nbPins, new Vector2(0, 0), realSize);
+    let rimToTotalWidthRatio = new Vector2(loomRimWidth / (realSize.x + loomRimWidth), loomRimWidth / (realSize.y + loomRimWidth));
+    let rimWidthInPixels = new Vector2(referenceSize.x * rimToTotalWidthRatio.x, referenceSize.y * rimToTotalWidthRatio.y);
+    let referenceSizeCorrected = new Vector2(referenceSize.x - rimWidthInPixels.x, referenceSize.y - rimWidthInPixels.y);
+    let referenceStart = Vector2.scale(rimWidthInPixels, 0.5);
+    this.pinsReference = this.generatePinPositions(nbPins, referenceStart, referenceSizeCorrected);
+
     this.generatePossibleLines(this.pinsReference);
   }
 
-  generatePinPositions(nbPins: number, width: number, height: number): Vector2[] {
+  generatePinPositions(nbPins: number, start:Vector2, size: Vector2): Vector2[] {
 
-    if (nbPins % 4 != 0) throw new Error('For a rectangle frame, the number of pins must be a multiple of 4');
+    if (nbPins % 4 != 0) throw new Error('For a rectangular frame, the number of pins must be a multiple of 4');
 
-    let perimeter = 2 * width + 2 * height;
-    let delta = perimeter / nbPins;
-    let nbPinsWidth = width / delta;
-    let nbPinsHeigth = height / delta;
+    let widthToHeightRatio = size.x / size.y;
 
-    if (nbPinsWidth % 1 != 0 || nbPinsHeigth % 1 != 0) throw new Error('For a rectangle frame, the distance between the pins must be constant, and a pins must be in each corner');
+    let nbPinsV = new Vector2(
+      Math.round((widthToHeightRatio * nbPins) / (2 * (1 + widthToHeightRatio))),
+      Math.round(nbPins / (2 * (1 + widthToHeightRatio)))
+    );
 
-    let deltaVector: Vector2 = new Vector2(delta, 0);
-    let currentPin: Vector2 = new Vector2(0, 0);
+    //console.log(nbPinsV); 
+    
+    let currentPin: Vector2 = Vector2.clone(start);
 
     let returnValue: Vector2[] = [];
 
+    let totalPins = 0;
+    for (let pinIndex = 0; pinIndex < nbPinsV.x; pinIndex++) {
+
+      let newPin = Vector2.clone(currentPin);
+      returnValue.push(newPin);
+
+      currentPin.x += size.x / nbPinsV.x;
+
+      totalPins++;
+    }
+    for (let pinIndex = 0; pinIndex < nbPinsV.y; pinIndex++) {
+
+      let newPin = Vector2.clone(currentPin);
+      returnValue.push(newPin);
+
+      currentPin.y += size.y / nbPinsV.y;
+
+      totalPins++;
+    }
+    for (let pinIndex = 0; pinIndex < nbPinsV.x; pinIndex++) {
+
+      let newPin = Vector2.clone(currentPin);
+      returnValue.push(newPin);
+
+      currentPin.x -= size.x / nbPinsV.x;
+
+      totalPins++;
+    }
+    for (let pinIndex = 0; pinIndex < nbPinsV.y; pinIndex++) {
+
+      let newPin = Vector2.clone(currentPin);
+      returnValue.push(newPin);
+
+      currentPin.y -= size.y / nbPinsV.y;
+
+      totalPins++;
+    }
+
+    //console.log(totalPins);
+    //console.log(returnValue);
+    
+/*
     for (let pinIndex = 0; pinIndex < nbPins; pinIndex++) {
       let newPin = Vector2.clone(currentPin);
 
       currentPin = Vector2.add(currentPin, deltaVector);
       currentPin.x = AlgoHelpers.snapNumber(currentPin.x, 0);
-      currentPin.x = AlgoHelpers.snapNumber(currentPin.x, width);
+      currentPin.x = AlgoHelpers.snapNumber(currentPin.x, size.x);
       currentPin.y = AlgoHelpers.snapNumber(currentPin.y, 0);
-      currentPin.y = AlgoHelpers.snapNumber(currentPin.y, -height);
+      currentPin.y = AlgoHelpers.snapNumber(currentPin.y, -size.y);
       
-      if (deltaVector.x > 0 && currentPin.x >= width) deltaVector = new Vector2(0, delta);
-      else if (deltaVector.y > 0 && currentPin.y >= height) deltaVector = new Vector2(-delta, 0);
+      if (deltaVector.x > 0 && currentPin.x >= size.x) deltaVector = new Vector2(0, delta);
+      else if (deltaVector.y > 0 && currentPin.y >= size.y) deltaVector = new Vector2(-delta, 0);
       else if (deltaVector.x < 0 && currentPin.x <= 0) deltaVector = new Vector2(0, -delta);
 
       returnValue.push(newPin);
     }
+    */
 
     return returnValue;
   }

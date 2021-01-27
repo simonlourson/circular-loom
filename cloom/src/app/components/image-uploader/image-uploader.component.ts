@@ -20,6 +20,10 @@ export class ImageUploaderComponent implements OnInit {
   canvasSize: Vector2 = new Vector2(500, 500);
   referenceSize: Vector2 = new Vector2(200, 200);
 
+  // Either show the image or the vectors
+  showImage: boolean = true;
+  get switchModeLabel() { return this.showImage ? "Passer en mode fils" : "Passer en mode image"; }
+
   // Colors for algorithm
   referenceData: number[];
   errorWeightData: number[];
@@ -30,14 +34,14 @@ export class ImageUploaderComponent implements OnInit {
   realZoom: number;
 
   // Thread contrast slider
-  currentBrightness: number = 14;
+  currentBrightness: number = 12;
 
   // Loom types dropdown
   loomTypes: LoomTypeWithLabel[] = [
     {loomType: LoomType.Circle, loomLabel: "Cerceau"},
     {loomType: LoomType.Rectangle, loomLabel: "Carré"}
   ];
-  selectedLoomType: LoomTypeWithLabel = this.loomTypes[0];
+  selectedLoomType: LoomTypeWithLabel = this.loomTypes[1];
   get isLoomTypeCircular(): boolean { return this.selectedLoomType.loomType == LoomType.Circle; }
   get isLoomTypeSquare(): boolean { return this.selectedLoomType.loomType == LoomType.Rectangle; }
 
@@ -83,7 +87,7 @@ export class ImageUploaderComponent implements OnInit {
     {color:"#FACDE1", colorName:"Rose"},
     {color:"#F9CCAF", colorName:"Abricot"}
   ];
-  selectedThreadColor: ColorWithLabel = this.threadColors[0];
+  selectedThreadColor: ColorWithLabel = this.threadColors[12];
 
   // Getters for the loomHelper component
   get loomCommonSize(): LoomSize {
@@ -107,6 +111,12 @@ export class ImageUploaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.initPixi();
+
+    this.image = new Image();
+    this.image.onload = this.loadImage.bind(this);
+    this.image.src = '/assets/ptitchat.png'; 
+
+    this.changeLoomType();
   }
 
   clickUpload() {
@@ -114,7 +124,6 @@ export class ImageUploaderComponent implements OnInit {
     fileElem.click();
   }
 
-  showImage: boolean = true;
   clickSwitch() {
     this.showImage = !this.showImage;
   }
@@ -147,7 +156,7 @@ export class ImageUploaderComponent implements OnInit {
       this.imageSprite.width /= ratio;
       this.imageSprite.height /= ratio;
     }
-    if (this.imageSprite.height > this.canvasSize.y) {
+    else if (this.imageSprite.height > this.canvasSize.y) {
       let ratio = this.imageSprite.height / this.canvasSize.y;
       this.imageSprite.width /= ratio;
       this.imageSprite.height /= ratio;
@@ -327,6 +336,8 @@ export class ImageUploaderComponent implements OnInit {
   }
 
   runAlgorithm() {
+    this.showImage = false;
+
     // First, create a container which is just our canvas, but with only the picture, not the loom frame
     let containerWithoutFrame = new Container();
 
@@ -350,7 +361,7 @@ export class ImageUploaderComponent implements OnInit {
     containerReference.addChild(imageReference);
 
     let fullImageData = this.pixiApp.renderer.extract.pixels(containerReference);
-    console.log(fullImageData);
+    //console.log(fullImageData);
 
     //let loomVectorInfo = new LoomVectorInfo(this.selectedNumberOfNails.value, this.selectedLoomType.loomType, this.loomCommonSize.size, this.loomCommonSize.rimWidth, Vector2.clone(this.referenceSize));
     let loom: ILoom;
@@ -387,8 +398,8 @@ export class ImageUploaderComponent implements OnInit {
         fullImageData[indexG] = 0;//greyscale;
         fullImageData[indexB] = 0;//greyscale;
 
-        //this.referenceData.push(255 - greyscale);
-        this.referenceData.push(255 - r);
+        this.referenceData.push(255 - greyscale);
+        //this.referenceData.push(255 - r);
       }
     }
 
@@ -401,10 +412,11 @@ export class ImageUploaderComponent implements OnInit {
         let indexG = index; index++;
         let indexB = index; index++;
         let indexA = index; index++;
-        this.errorWeightData.push(fullImageData[indexG]);
+        //this.errorWeightData.push(fullImageData[indexG]);
+        this.errorWeightData.push(0);
       }
     }
-    console.log(this.referenceData);
+    //console.log(this.referenceData);
     let optionsMinimumError: OptionsMinimumError = {
       loom: loom,
       threadContrast: this.currentBrightness,

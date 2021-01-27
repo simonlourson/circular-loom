@@ -18,4 +18,12 @@ cd cd /opt/bitnami/apache/conf/vhosts/
 vi sample-https-vhost.conf
 
 ps -ef | grep server
-kill 2041
+kill 14481
+
+sudo export ADDRESS="filunique.com"
+ADDRESS
+
+ADDRESS="filunique.com"; export ADDRESS
+
+
+sudo forever start -e ./logs/err_20210110.log -o ./logs/out_20210110.log dist/index.js

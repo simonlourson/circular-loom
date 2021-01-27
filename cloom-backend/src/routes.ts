@@ -11,6 +11,7 @@ export class Routes {
 
     //app.use(raw({type: 'application/octet-stream', limit : '2mb'}));
     app.route("/face/*").post(this.faces);
+    app.route("/talend/statuses").post(this.statuses);
 
     app.use(express.static(path.join(__dirname, "public")));
     app.get('*', function(req, res){
@@ -31,6 +32,13 @@ export class Routes {
     }
     //axios(config).then((res) => console.log(res))
     */
+  }
+
+  public statuses(req: Request, res: Response) {
+    console.log('Routes.statuses');
+    console.log(req.body);
+    console.log(req.headers);
+    res.json({});
   }
 
   public faces(req: Request, res: Response) 
