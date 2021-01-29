@@ -11,6 +11,7 @@ import { SliderModule } from 'primeng/slider';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
+import { CheckboxModule } from 'primeng/checkbox';
 import { PrintDrillGuideComponent } from './components/print-drill-guide/print-drill-guide.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoomHelperComponent } from './components/loom-helper/loom-helper.component';
@@ -23,7 +24,7 @@ import { ImageUploaderComponent } from './components/image-uploader/image-upload
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    ButtonModule, SliderModule, InputTextModule, InputNumberModule, DropdownModule,
+    ButtonModule, SliderModule, InputTextModule, InputNumberModule, DropdownModule, CheckboxModule,
     HttpClientModule
   ],
   declarations: [

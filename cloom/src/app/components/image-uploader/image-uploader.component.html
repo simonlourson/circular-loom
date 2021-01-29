@@ -66,7 +66,7 @@
         </li>
         <li>
           <label class="p-component">Luminosité : {{currentBrightness}}</label>
-          <p-slider styleClass="p-disable-slider-color" [(ngModel)]="currentBrightness" [min]="10" [max]="25" [step]="0.1"  [disabled]="false"></p-slider>
+          <p-slider styleClass="p-disable-slider-color" [(ngModel)]="currentBrightness" [min]="6" [max]="25" [step]="0.1"  [disabled]="false"></p-slider>
         </li>
         <li>
           <label class="p-component">Couleur de fil</label>
@@ -84,6 +84,10 @@
               </div>
             </ng-template>
           </p-dropdown>
+        </li>
+        <li>
+          <label class="p-component">Mode avancé</label>
+          <p-checkbox [(ngModel)]="advancedMode" [binary]="true"></p-checkbox>
         </li>
       </div>
     </td>

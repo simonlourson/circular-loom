@@ -13,6 +13,16 @@ class App
     dotenv.config();
     console.log(process.env.ENV_NAME);
 
+    let testComplexType: any = {
+      testInfo1: "testValue1",
+      testInfo2: "testValue2",
+      testNestedInfo : {
+        testNested1: "testNestedValue1",
+        testNested2: "testNestedValue2"
+      }
+    }
+
+    console.log(JSON.stringify(testComplexType));
 
     // Create a new express application instance and add middleware
     this.app = express();

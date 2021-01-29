@@ -5,7 +5,7 @@ sudo cp /opt/bitnami/apache/conf/vhosts/sample-https-vhost.conf.disabled /opt/bi
 sudo /opt/bitnami/ctlscript.sh restart apache
 
 cd /home/bitnami/circular-loom/cloom-backend
-forever start -e ../logs/err_20201219.log -o ../logs/out_20201219.log build/server.js
+sudo forever start -e ../logs/err_20210127.log -o ../logs/out_20210127.log build/server.js
 forever start build/server.js
 
 bitnami@ip-172-26-4-86:/opt/bitnami/letsencrypt/certificates$ ls

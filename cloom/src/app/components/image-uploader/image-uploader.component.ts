@@ -57,13 +57,13 @@ export class ImageUploaderComponent implements OnInit {
     {size: 680, rimWidth: 20, label: "70cm", pointFile: "c680.json"},
     {size: 580, rimWidth: 20, label: "60cm", pointFile: "c580.json"}
   ];
-  selectedDiameter: any = this.diameterSizes[0];
+  selectedDiameter: LoomSize = this.diameterSizes[0];
 
   // Square loom sizes dropdown
   squareSizes: LoomSize[] = [
     {size: 475, rimWidth: 23, label: "50cm", pointFile: "s475.json"},
   ];
-  selectedSquareSize: any = this.squareSizes[0];
+  selectedSquareSize: LoomSize = this.squareSizes[0];
 
   // Thread color dropdown
   threadColors: ColorWithLabel[] = [
@@ -73,7 +73,7 @@ export class ImageUploaderComponent implements OnInit {
     {color:"#FFFFFF", colorName:"Blanc"},
     {color:"#246344", colorName:"Vert Herbe"},
     {color:"#A6D273", colorName:"Vert Pomme"},
-    {color:"#374F8F", colorName:"Bleu Roi"},
+    {color:"#009", colorName:"Bleu Roi"},
     {color:"#D7EAFB", colorName:"Bleu Clair"},
     {color:"#1A78AE", colorName:"Turquoise"},
     {color:"#C5B39D", colorName:"Beige Clair"},
@@ -88,6 +88,8 @@ export class ImageUploaderComponent implements OnInit {
     {color:"#F9CCAF", colorName:"Abricot"}
   ];
   selectedThreadColor: ColorWithLabel = this.threadColors[12];
+
+  advancedMode: boolean = true;
 
   // Getters for the loomHelper component
   get loomCommonSize(): LoomSize {
@@ -174,6 +176,8 @@ export class ImageUploaderComponent implements OnInit {
 
     this.pixiApp.stage.addChild(this.imageSprite);
     this.pixiApp.stage.sortChildren();
+
+    this.showImage = true;
   }
 
   dragOverHandler(event: any) {
@@ -211,18 +215,12 @@ export class ImageUploaderComponent implements OnInit {
     return false;
   }
 
-  
-  uploadedImageBuffer: ArrayBuffer;
   readImageFile(file: File) {
     let reader = new FileReader();
     reader.onloadend = () => { 
 
-      // We update the binary buffer that will be sent to the faces API
-      this.uploadedImageBuffer = reader.result as ArrayBuffer;
-      
-      // We use the binary buffer to create a base64 uri to display the image.
       let binary = '';
-      let bytes = new Uint8Array(this.uploadedImageBuffer);
+      let bytes = new Uint8Array(reader.result as ArrayBuffer);
       var len = bytes.byteLength;
       for (var i = 0; i < len; i++)
         binary += String.fromCharCode(bytes[i]);
@@ -398,8 +396,8 @@ export class ImageUploaderComponent implements OnInit {
         fullImageData[indexG] = 0;//greyscale;
         fullImageData[indexB] = 0;//greyscale;
 
-        this.referenceData.push(255 - greyscale);
-        //this.referenceData.push(255 - r);
+        if (this.advancedMode) this.referenceData.push(255 - r);
+        else this.referenceData.push(255 - greyscale);
       }
     }
 
@@ -412,8 +410,9 @@ export class ImageUploaderComponent implements OnInit {
         let indexG = index; index++;
         let indexB = index; index++;
         let indexA = index; index++;
-        //this.errorWeightData.push(fullImageData[indexG]);
-        this.errorWeightData.push(0);
+        
+        if (this.advancedMode) this.errorWeightData.push(fullImageData[indexG]);
+        else this.errorWeightData.push(0);
       }
     }
     //console.log(this.referenceData);
