@@ -12,6 +12,15 @@ var App = /** @class */ (function () {
         // initialize configuration
         dotenv_1.default.config();
         console.log(process.env.ENV_NAME);
+        var testComplexType = {
+            testInfo1: "testValue1",
+            testInfo2: "testValue2",
+            testNestedInfo: {
+                testNested1: "testNestedValue1",
+                testNested2: "testNestedValue2"
+            }
+        };
+        console.log(JSON.stringify(testComplexType));
         // Create a new express application instance and add middleware
         this.app = express_1.default();
         this.app.use(express_1.default.json({ type: 'application/json', limit: '1mb' }));

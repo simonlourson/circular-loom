@@ -73,13 +73,13 @@ export class ImageUploaderComponent implements OnInit {
     {color:"#FFFFFF", colorName:"Blanc"},
     {color:"#246344", colorName:"Vert Herbe"},
     {color:"#A6D273", colorName:"Vert Pomme"},
-    {color:"#009", colorName:"Bleu Roi"},
+    {color:"#0A0054", colorName:"Bleu Roi"},
     {color:"#D7EAFB", colorName:"Bleu Clair"},
     {color:"#1A78AE", colorName:"Turquoise"},
     {color:"#C5B39D", colorName:"Beige Clair"},
     {color:"#D8BB99", colorName:"Beige"},
     {color:"#8A745F", colorName:"Beige Foncé"},
-    {color:"#534032", colorName:"Marron Foncé"},
+    {color:"#381D17", colorName:"Marron Foncé"},
     {color:"#B51813", colorName:"Rouge"},
     {color:"#5A3585", colorName:"Lilas"},
     {color:"#FC773C", colorName:"Orange"},
@@ -442,6 +442,10 @@ export class ImageUploaderComponent implements OnInit {
       this.addBlob(blob, 'test.png');
     }); 
     */
+  }
+
+  downloadLoom() {
+    this.loomHelper.saveLoom();
   }
 
   nextPin(pin: number) {

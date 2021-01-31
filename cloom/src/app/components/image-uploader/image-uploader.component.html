@@ -37,6 +37,9 @@
         <li>
           <button class="full-length-button" (click)="clickSwitch()" pButton type="button" [label]="switchModeLabel" ></button>
         </li>
+        <li>
+          <button class="full-length-button" (click)="downloadLoom()" pButton type="button" label="Télécharger les fils" ></button>
+        </li>
         <li *ngIf="!showImage">
           <label class="p-component">Nombre de traits : {{loomHelper.nbArcs}}</label>
         </li>

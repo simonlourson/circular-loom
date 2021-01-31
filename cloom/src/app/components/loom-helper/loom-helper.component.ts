@@ -193,19 +193,19 @@ export class LoomHelperComponent implements OnInit {
   }
 
   saveLoom() {
-    let tom = new SavedLoom();
-    tom.pinPath = this.pinPath;
-    tom.pins = this.pins;
-    tom.loomDiameter = this.loomDiameter;
-    tom.loomRimWidth = this.loomRimWidth;
-    tom.threadColor = this.threadColor;
-    tom.threadWidth = this.threadWidth;
-    tom.loomType = this.loomType;
+    let loom = new SavedLoom();
+    loom.pinPath = this.pinPath;
+    loom.pins = this.pins;
+    loom.loomDiameter = this.loomDiameter;
+    loom.loomRimWidth = this.loomRimWidth;
+    loom.threadColor = this.threadColor;
+    loom.threadWidth = this.threadWidth;
+    loom.loomType = this.loomType;
 
     let a = document.createElement('a');
     document.body.append(a);
     a.download = 'loom.json';
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(tom)], {}));
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(loom)], {}));
     a.click();
     a.remove();
   }

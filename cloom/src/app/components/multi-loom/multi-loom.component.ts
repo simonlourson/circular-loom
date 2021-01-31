@@ -45,6 +45,8 @@ export class MultiLoomComponent implements OnInit {
   maxPinPathLength = 0;
   pinPathLoaded(length: number) {
     if (length > this.maxPinPathLength) this.maxPinPathLength = length;
+    this.currentRatio = 0;
+    this.changeRatio();
   }
 
   replayDisabled: boolean = false;
