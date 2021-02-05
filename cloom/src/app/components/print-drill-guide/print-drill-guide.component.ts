@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { LoomType } from 'src/app/common/saved-loom';
 import { Vector2 } from '../../common/vector2';
 
 @Component({
   selector: 'app-print-drill-guide',
   templateUrl: './print-drill-guide.component.html',
-  styleUrls: ['./print-drill-guide.component.css']
+  styleUrls: ['./print-drill-guide.component.css'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class PrintDrillGuideComponent implements OnInit {
 
@@ -17,7 +19,7 @@ export class PrintDrillGuideComponent implements OnInit {
   //rimWidth: number = 20;
 
   nbPins: number = 200;
-  loomDiameter: number = 800;
+  loomDiameter: number = 600;
   rimWidth: number = 20;
 
   boxPaths: string[];
@@ -25,7 +27,16 @@ export class PrintDrillGuideComponent implements OnInit {
   nailCenters: Vector2[];
   textPositions: Vector2[];
   textValues: string[];
-  loomType: LoomType = LoomType.Rectangle;
+  loomType: LoomType = LoomType.Circle;
+
+  top: number = undefined;
+  bottom: number = undefined;
+  left: number = undefined;
+  right: number = undefined;
+  //[attr.viewBox]="viewbox"
+  get viewbox() { return Math.floor(this.left) + " " + Math.floor(this.top) + " " + Math.floor(this.right - this.left) + " " + Math.floor(this.bottom - this.top); }
+
+  @ViewChild('svgPaths') svgPaths: ElementRef;
 
   ngOnInit(): void {
 
@@ -39,23 +50,31 @@ export class PrintDrillGuideComponent implements OnInit {
       let innerRim = this.loomDiameter / 2 - this.rimWidth;
       let outerRim = this.loomDiameter / 2;
       let centerRim = this.loomDiameter / 2 - this.rimWidth / 2;
-      let textRim = this.loomDiameter / 2 - this.rimWidth * 0.2;
+      let textRim = this.loomDiameter / 2 - this.rimWidth * 0.23;
 
       for (let i = 0; i < this.nbPins; i++) {
 
         let currentAngle = i * Math.PI * 2 / this.nbPins;
         let nextAngle = (i+1) * Math.PI * 2 / this.nbPins;
         let halfAngle = (i+0.5) * Math.PI * 2 / this.nbPins;
-        let b1 = new Vector2(Math.cos(currentAngle) * innerRim, Math.sin(currentAngle) * innerRim);
-        let b2 = new Vector2(Math.cos(currentAngle) * outerRim, Math.sin(currentAngle) * outerRim);
-        let b3 = new Vector2(Math.cos(nextAngle) * outerRim, Math.sin(nextAngle) * outerRim);
-        let b4 = new Vector2(Math.cos(nextAngle) * innerRim, Math.sin(nextAngle) * innerRim);
+        let boxCorners: Vector2[] = [];
+        boxCorners[0] = new Vector2(Math.cos(currentAngle) * innerRim, Math.sin(currentAngle) * innerRim);
+        boxCorners[1] = new Vector2(Math.cos(currentAngle) * outerRim, Math.sin(currentAngle) * outerRim);
+        boxCorners[2] = new Vector2(Math.cos(nextAngle) * outerRim, Math.sin(nextAngle) * outerRim);
+        boxCorners[3] = new Vector2(Math.cos(nextAngle) * innerRim, Math.sin(nextAngle) * innerRim);
+
+        for (let i: number = 0; i < 4; i++) {
+          if (this.left == undefined || boxCorners[i].x < this.left) this.left = boxCorners[i].x;
+          if (this.right == undefined || boxCorners[i].x > this.right) this.right = boxCorners[i].x;
+          if (this.top == undefined || boxCorners[i].y < this.top) this.top = boxCorners[i].y;
+          if (this.bottom == undefined || boxCorners[i].y > this.bottom) this.bottom = boxCorners[i].y;
+        }
 
         if ((i+1) % 10 == 0) this.boxFills[i] = '#dcffdc';
         else if ((i+1) % 5 == 0) this.boxFills[i] = '#ffdcdc';
         else this.boxFills[i] = 'none';
 
-        let path = 'M' + b1.x + ',' + b1.y + ' L' + b2.x + ',' + b2.y + ' L' + b3.x + ',' + b3.y + ' L' + b4.x + ',' + b4.y + 'z';
+        let path = 'M' + boxCorners[0].x + ',' + boxCorners[0].y + ' L' + boxCorners[1].x + ',' + boxCorners[1].y + ' L' + boxCorners[2].x + ',' + boxCorners[2].y + ' L' + boxCorners[3].x + ',' + boxCorners[3].y + 'z';
         this.boxPaths.push(path);
 
         let nailCenter = new Vector2(Math.cos(halfAngle) * centerRim, Math.sin(halfAngle) * centerRim);
@@ -84,14 +103,15 @@ export class PrintDrillGuideComponent implements OnInit {
         nailCenter = Vector2.add(nailCenter, new Vector2(20, 20))
         this.nailCenters.push(nailCenter);
 
-        let b1 = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, 0));
-        let b2 = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, +rimWidth / 2));
-        let b3 = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, +rimWidth / 2));
-        let b4 = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, 0));
-        //let b1 = Vector2.add(nailCenter, new Vector2(0, delta.y * -0.5));
-        //let b2 = Vector2.add(nailCenter, new Vector2(+rimWidth / 2, delta.y * -0.5));
-        //let b3 = Vector2.add(nailCenter, new Vector2(+rimWidth / 2, delta.y * +0.5));
-        //let b4 = Vector2.add(nailCenter, new Vector2(0, delta.y * +0.5));
+        let boxCorners: Vector2[] = [];
+        boxCorners[0] = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, 0));
+        boxCorners[1] = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, +rimWidth / 2));
+        boxCorners[2] = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, +rimWidth / 2));
+        boxCorners[3] = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, 0));
+        //let boxCorners[0] = Vector2.add(nailCenter, new Vector2(0, delta.y * -0.5));
+        //let boxCorners[1] = Vector2.add(nailCenter, new Vector2(+rimWidth / 2, delta.y * -0.5));
+        //let boxCorners[2] = Vector2.add(nailCenter, new Vector2(+rimWidth / 2, delta.y * +0.5));
+        //let boxCorners[3] = Vector2.add(nailCenter, new Vector2(0, delta.y * +0.5));
 
         let topNumber = i+1;
         let bottomNumber = 151-i;
@@ -102,7 +122,7 @@ export class PrintDrillGuideComponent implements OnInit {
         else if (bottomNumber % 5 == 0) this.boxFills[i] = '#dcffdc';
         else this.boxFills[i] = 'none';
 
-        let path = 'M' + b1.x + ',' + b1.y + ' L' + b2.x + ',' + b2.y + ' L' + b3.x + ',' + b3.y + ' L' + b4.x + ',' + b4.y + 'z';
+        let path = 'M' + boxCorners[0].x + ',' + boxCorners[0].y + ' L' + boxCorners[1].x + ',' + boxCorners[1].y + ' L' + boxCorners[2].x + ',' + boxCorners[2].y + ' L' + boxCorners[3].x + ',' + boxCorners[3].y + 'z';
         this.boxPaths.push(path);
 
         //let textPosition = Vector2.add(nailCenter, new Vector2(+rimWidth / 4, 0));
@@ -114,6 +134,24 @@ export class PrintDrillGuideComponent implements OnInit {
         this.textValues.push(this.pad(bottomNumber, 3, '0'));
       }
     }
+  }
+
+  clickDownload() {
+
+    let testAws = ["N329SEdSRe5Uv/sUSzHkNQ==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/g5632schkjc64vf77mkewmpegu", "Lbdv3qn/iH7PpumsTm5SbA==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/fw3w7xvj76eh5t5g5gwe43ssnq", "y8kAnLPAJgxxGvL9Ur993A==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/zpeqbhftyatay4i26l6vfp353q"];
+    console.log(JSON.stringify(testAws));
+
+    console.log('test');
+    console.log(this.svgPaths)
+    let test = this.svgPaths.nativeElement.innerHTML;
+    console.log(test);
+
+    let a = document.createElement('a');
+    document.body.append(a);
+    a.download = 'print.svg';
+    a.href = URL.createObjectURL(new Blob([test], {}));
+    a.click();
+    a.remove();
   }
 
   pad(num: number, padlen: number, padchar: string) {

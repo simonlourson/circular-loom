@@ -141,25 +141,6 @@ export class AlgoHelpers {
     else return n;
   }
 
-  static generatePossibleLinesRectangle(pins: Vector2[], width: number, height: number): LoomLine[] {
-    let returnValue: LoomLine[] = [];
-    for (let pinStartIndex = 0; pinStartIndex < pins.length - 1; pinStartIndex++) {
-      for (let pinStopIndex = pinStartIndex + 1; pinStopIndex < pins.length; pinStopIndex++) {
-        if (!AlgoHelpers.colinear(pinStartIndex, pinStopIndex, pins)) {
-          let newLoomLine = new LoomLine(pinStartIndex, pinStopIndex);
-
-          let startPos = pins[pinStartIndex].clone();
-          let stopPos = pins[pinStopIndex].clone();
-
-          newLoomLine.pixelsThrough = AlgoHelpers.pixelsCrossedByLine(startPos, stopPos);
-          returnValue.push(newLoomLine);
-        }
-      }
-    }
-
-    return returnValue;
-  }
-
   static distanceBetweenPins(pinStart: number, pinStop: number, nbPins: number): number {
     let distance = Math.abs(pinStart - pinStop);
 
@@ -173,20 +154,39 @@ export class AlgoHelpers {
     );
   }
 
-  static colinear(pinStartIndex: number, pinStopIndex: number, pins: Vector2[]) {
+  static colinear(pinStartIndex: number, pinStopIndex: number, pins: Vector2[], minAngle: number) {
 
     for (let index = 0; index < pins.length; index++) {
       if (index == pinStartIndex || index == pinStopIndex) continue;
 
+      /*
       let v1 = pins[pinStartIndex];
       let v2 = pins[pinStopIndex];
       let v3 = pins[index];
 
       let result = (v2.x-v1.x)*(v3.y-v1.y)-(v2.y-v1.y)*(v3.x-v1.x);
-      if (result == 0) return true;
+      if (Math.abs(result) < 1) return true;
+      */
+
+      let vectorIn = new Vector2( 
+        pins[index].x - pins[pinStartIndex].x,
+        pins[index].y - pins[pinStartIndex].y
+      );
+      let vectorOut: Vector2 = new Vector2(
+        pins[pinStopIndex].x - pins[index].x,
+        pins[pinStopIndex].y - pins[index].y
+      );
+
+      let angle = AlgoHelpers.getAngleBetweenVectors(vectorIn, vectorOut);
+      angle = ((angle * 180 / Math.PI) + 360) % 180;
+      if (angle < minAngle || angle > (180-minAngle)) return true;
     }
 
     return false;
+  }
+
+  static getAngleBetweenVectors(vectorIn: Vector2, vectorOut: Vector2) {
+    return Math.atan2(vectorIn.x*vectorOut.y-vectorIn.y*vectorOut.x,vectorIn.x*vectorOut.x+vectorIn.y*vectorOut.y);
   }
 
   static getIndexFromVector(pixelPosition: Vector2, referenceSize: number) {

@@ -374,7 +374,8 @@ export class ImageUploaderComponent implements OnInit {
       this.selectedNumberOfNails.value,
       this.loomCommonSize.rimWidth,
       this.referenceSize,
-      new Vector2(this.loomCommonSize.size, this.loomCommonSize.size)
+      new Vector2(this.loomCommonSize.size, this.loomCommonSize.size),
+      10
     );
 
     // Step one : convert image to greyscale and update the reference array for the algorithm

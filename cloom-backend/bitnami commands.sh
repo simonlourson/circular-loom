@@ -5,7 +5,7 @@ sudo cp /opt/bitnami/apache/conf/vhosts/sample-https-vhost.conf.disabled /opt/bi
 sudo /opt/bitnami/ctlscript.sh restart apache
 
 cd /home/bitnami/circular-loom/cloom-backend
-sudo forever start -e ../logs/err_20210127.log -o ../logs/out_20210127.log build/server.js
+sudo forever start -e ../logs/err_20210131.log -o ../logs/out_20210131.log build/server.js
 forever start build/server.js
 
 bitnami@ip-172-26-4-86:/opt/bitnami/letsencrypt/certificates$ ls
@@ -27,3 +27,8 @@ ADDRESS="filunique.com"; export ADDRESS
 
 
 sudo forever start -e ./logs/err_20210110.log -o ./logs/out_20210110.log dist/index.js
+
+
+ALTER USER postgres PASSWORD 'zCTJQjkPa12eH3bE';
+
+sudo nano /etc/postgresql/11/main/pg_hba.conf

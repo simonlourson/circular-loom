@@ -8,9 +8,9 @@ export class SavedLoom {
   loomType: LoomType;
   loomDiameter: number;
   loomRimWidth: number;
-  threadColor: string;
   loomColor: string;
   threadWidth: string;
+  threadColor: string;
 
   static copyFrom(original: SavedLoom): SavedLoom {
     let returnValue = new SavedLoom();

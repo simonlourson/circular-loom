@@ -15,6 +15,9 @@
   </div>
   <p-slider [(ngModel)]="currentPin" [min]="0" [max]="pinPath.length" [style]="{'width': '500px'}"></p-slider>
   <br>
+  <div>Vitesse du robot : {{playbackSpeed}} secondes par instruction</div>
+  <p-slider [(ngModel)]="playbackSpeed" [min]="1" [max]="10" [step]="0.1" [style]="{'width': '500px'}"></p-slider>
+  <br>
   <div *ngIf="instructions != undefined && instructions.length > 0">Instruction courante : {{instructionString(instructions[currentPin])}}</div>
   <div>Longueur du fil : {{totalLenghtForDisplay}}</div>
   <div>Nombre de rayons : {{nbArcs}}</div>

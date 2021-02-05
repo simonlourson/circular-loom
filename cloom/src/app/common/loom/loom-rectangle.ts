@@ -10,7 +10,7 @@ export class LoomRectangle implements ILoom {
   loomLines: LoomLine[];
   loomRimWidth: number;
 
-  constructor(nbPins: number, loomRimWidth: number, referenceSize: Vector2, realSize: Vector2) {
+  constructor(nbPins: number, loomRimWidth: number, referenceSize: Vector2, realSize: Vector2, minAngle: number) {
     this.loomRimWidth = loomRimWidth;
 
     this.pins = this.generatePinPositions(nbPins, new Vector2(0, 0), realSize);
@@ -20,7 +20,7 @@ export class LoomRectangle implements ILoom {
     let referenceStart = Vector2.scale(rimWidthInPixels, 0.5);
     this.pinsReference = this.generatePinPositions(nbPins, referenceStart, referenceSizeCorrected);
 
-    this.generatePossibleLines(this.pinsReference);
+    this.generatePossibleLines(this.pinsReference, minAngle);
   }
 
   generatePinPositions(nbPins: number, start:Vector2, size: Vector2): Vector2[] {
@@ -79,7 +79,7 @@ export class LoomRectangle implements ILoom {
     }
 
     //console.log(totalPins);
-    //console.log(returnValue);
+    console.log(returnValue);
     
 /*
     for (let pinIndex = 0; pinIndex < nbPins; pinIndex++) {
@@ -102,11 +102,31 @@ export class LoomRectangle implements ILoom {
     return returnValue;
   }
     
-  generatePossibleLines(pins: Vector2[]) {
+  generatePossibleLines(pins: Vector2[], minAngle: number) {
+
+    /*
+    // Tests colinear
+    let pinStartIndex = 13;
+    let pinStopIndex = 195;
+    for (let index: number = 0; index < 200; index++) {
+      let vectorIn = new Vector2(
+        pins[index].x - pins[pinStartIndex].x,
+        pins[index].y - pins[pinStartIndex].y
+      );
+      let vectorOut: Vector2 = new Vector2(
+        pins[pinStopIndex].x - pins[index].x,
+        pins[pinStopIndex].y - pins[index].y
+      );
+
+      let angle = AlgoHelpers.getAngleBetweenVectors(vectorIn, vectorOut);
+      console.log(((angle * 180 / Math.PI) + 360) % 180)
+    }
+    */
+
     this.loomLines = [];
     for (let pinStartIndex = 0; pinStartIndex < pins.length - 1; pinStartIndex++) {
       for (let pinStopIndex = pinStartIndex + 1; pinStopIndex < pins.length; pinStopIndex++) {
-        if (!AlgoHelpers.colinear(pinStartIndex, pinStopIndex, pins)) {
+        if (!AlgoHelpers.colinear(pinStartIndex, pinStopIndex, pins, minAngle)) {
           let newLoomLine = new LoomLine(pinStartIndex, pinStopIndex);
 
           let startPos = pins[pinStartIndex].clone();

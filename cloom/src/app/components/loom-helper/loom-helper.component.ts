@@ -153,8 +153,9 @@ export class LoomHelperComponent implements OnInit {
     this.playRecursive();
   }
 
+  playbackSpeed: number = 7;
   playRecursiveWithDelay() {
-    setTimeout(this.playRecursive.bind(this), 2200); 
+    setTimeout(this.playRecursive.bind(this), this.playbackSpeed * 1000); 
   }
 
   playRecursive() {
@@ -198,8 +199,9 @@ export class LoomHelperComponent implements OnInit {
     loom.pins = this.pins;
     loom.loomDiameter = this.loomDiameter;
     loom.loomRimWidth = this.loomRimWidth;
-    loom.threadColor = this.threadColor;
+    loom.loomColor = this.loomColor;
     loom.threadWidth = this.threadWidth;
+    loom.threadColor = this.threadColor;
     loom.loomType = this.loomType;
 
     let a = document.createElement('a');
@@ -227,7 +229,7 @@ export class LoomHelperComponent implements OnInit {
           pinOut.y - pinCurrent.y
         );
 
-        let angle = Math.atan2(vectorIn.x*vectorOut.y-vectorIn.y*vectorOut.x,vectorIn.x*vectorOut.x+vectorIn.y*vectorOut.y);
+        let angle = AlgoHelpers.getAngleBetweenVectors(vectorIn, vectorOut);// Math.atan2(vectorIn.x*vectorOut.y-vectorIn.y*vectorOut.x,vectorIn.x*vectorOut.x+vectorIn.y*vectorOut.y);
         this.instructions[index] = (this.pinPath[index]+1) + (angle < 0 ? 'h' : 'a');
       }
     }
