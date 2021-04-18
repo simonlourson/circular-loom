@@ -14,13 +14,13 @@ export class PrintDrillGuideComponent implements OnInit {
   constructor() { }
 
   // Circle
-  //nbPins: number = 200;
-  //loomDiameter: number = 800;
-  //rimWidth: number = 20;
-
   nbPins: number = 200;
-  loomDiameter: number = 600;
+  loomDiameter: number = 700;
   rimWidth: number = 20;
+
+  //nbPins: number = 200;
+  //loomDiameter: number = 600;
+  //rimWidth: number = 20;
 
   boxPaths: string[];
   boxFills: string[];
@@ -87,64 +87,69 @@ export class PrintDrillGuideComponent implements OnInit {
     }
     else if (this.loomType == LoomType.Rectangle) {
       //let totalLength = 1450;
-      let totalLength = 450+23+23;
-      let rimWidth = 23;
+      let totalLength = 450+22+22;
+      let rimWidth = 22;
       let nbPins = 51;
       //let nbPinsForLength = 49 * 3 + 1 + 1 + 1 + 1;
       let nbPinsForLength = 51;
-      //let distanceBetweenNails = (totalLength - rimWidth / 2 - rimWidth / 2) / nbPinsForLength;
-      let distanceBetweenNails = 475 / (nbPinsForLength - 1);
+      let distanceBetweenNails = (totalLength - rimWidth / 2 - rimWidth / 2) / (nbPinsForLength - 1);
+      //let distanceBetweenNails = 475 / (nbPinsForLength - 1);
       //let delta = new Vector2(distanceBetweenNails, 0);
-      let delta = new Vector2(distanceBetweenNails, 0);
+      let delta = new Vector2(0, distanceBetweenNails);
 
-      for (let i = 0; i < nbPins; i++) {
+      for (let i = 0; i < nbPinsForLength; i++) {
         let nailCenter = Vector2.scale(delta, i);
         //nailCenter = Vector2.add(nailCenter, new Vector2(0, 20))
-        nailCenter = Vector2.add(nailCenter, new Vector2(20, 20))
+        //nailCenter = Vector2.add(nailCenter, new Vector2(20, 20))
         this.nailCenters.push(nailCenter);
 
         let boxCorners: Vector2[] = [];
-        boxCorners[0] = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, 0));
-        boxCorners[1] = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, +rimWidth / 2));
-        boxCorners[2] = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, +rimWidth / 2));
-        boxCorners[3] = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, 0));
-        //let boxCorners[0] = Vector2.add(nailCenter, new Vector2(0, delta.y * -0.5));
-        //let boxCorners[1] = Vector2.add(nailCenter, new Vector2(+rimWidth / 2, delta.y * -0.5));
-        //let boxCorners[2] = Vector2.add(nailCenter, new Vector2(+rimWidth / 2, delta.y * +0.5));
-        //let boxCorners[3] = Vector2.add(nailCenter, new Vector2(0, delta.y * +0.5));
+        
+        /*
+        boxCorners[0] = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, 1 * +rimWidth / 2)); 
+        boxCorners[1] = Vector2.add(nailCenter, new Vector2(delta.x * -0.5, 0 * -rimWidth / 2));
+        boxCorners[2] = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, 0 * -rimWidth / 2));
+        boxCorners[3] = Vector2.add(nailCenter, new Vector2(delta.x * +0.5, 1 * +rimWidth / 2));
+        */
+
+        
+        boxCorners[0] = Vector2.add(nailCenter, new Vector2(1 * -rimWidth / 2, delta.y * -0.5)); 
+        boxCorners[1] = Vector2.add(nailCenter, new Vector2(0 * +rimWidth / 2, delta.y * -0.5));
+        boxCorners[2] = Vector2.add(nailCenter, new Vector2(0 * +rimWidth / 2, delta.y * +0.5));
+        boxCorners[3] = Vector2.add(nailCenter, new Vector2(1 * -rimWidth / 2, delta.y * +0.5));
+        
 
         let topNumber = i+1;
         let bottomNumber = 151-i;
         let rightNumber = 51+i
         let leftNumber = 201-i
 
-        if (bottomNumber % 10 == 0) this.boxFills[i] = '#ffdcdc';
-        else if (bottomNumber % 5 == 0) this.boxFills[i] = '#dcffdc';
+        if (leftNumber % 10 == 0) this.boxFills[i] = '#ffdcdc';
+        else if (leftNumber % 5 == 0) this.boxFills[i] = '#dcffdc';
         else this.boxFills[i] = 'none';
+
+        //this.boxFills[i] = 'none';
 
         let path = 'M' + boxCorners[0].x + ',' + boxCorners[0].y + ' L' + boxCorners[1].x + ',' + boxCorners[1].y + ' L' + boxCorners[2].x + ',' + boxCorners[2].y + ' L' + boxCorners[3].x + ',' + boxCorners[3].y + 'z';
         this.boxPaths.push(path);
 
-        //let textPosition = Vector2.add(nailCenter, new Vector2(+rimWidth / 4, 0));
-        let textPosition = Vector2.add(nailCenter, new Vector2(0, +rimWidth / 4));
+        let textPosition = Vector2.add(nailCenter, new Vector2(-rimWidth / 4, 0));
+        //let textPosition = Vector2.add(nailCenter, new Vector2(0, +rimWidth / 4));
         textPosition = Vector2.add(textPosition, new Vector2(-6.182/2, 2.623/2));
         this.textPositions.push(textPosition);
 
         
-        this.textValues.push(this.pad(bottomNumber, 3, '0'));
+        this.textValues.push(this.pad(leftNumber, 3, '0'));
       }
     }
   }
 
   clickDownload() {
 
-    let testAws = ["N329SEdSRe5Uv/sUSzHkNQ==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/g5632schkjc64vf77mkewmpegu", "Lbdv3qn/iH7PpumsTm5SbA==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/fw3w7xvj76eh5t5g5gwe43ssnq", "y8kAnLPAJgxxGvL9Ur993A==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/zpeqbhftyatay4i26l6vfp353q"];
-    console.log(JSON.stringify(testAws));
+    //let testAws = ["N329SEdSRe5Uv/sUSzHkNQ==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/g5632schkjc64vf77mkewmpegu", "Lbdv3qn/iH7PpumsTm5SbA==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/fw3w7xvj76eh5t5g5gwe43ssnq", "y8kAnLPAJgxxGvL9Ur993A==;4fs5zmmaplnfd2kddxqwmg6c3il7dva6gqhyzof2bq7tm3klbukq/zpeqbhftyatay4i26l6vfp353q"];
+    //console.log(JSON.stringify(testAws));
 
-    console.log('test');
-    console.log(this.svgPaths)
     let test = this.svgPaths.nativeElement.innerHTML;
-    console.log(test);
 
     let a = document.createElement('a');
     document.body.append(a);

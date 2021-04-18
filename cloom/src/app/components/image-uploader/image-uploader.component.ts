@@ -116,7 +116,7 @@ export class ImageUploaderComponent implements OnInit {
 
     this.image = new Image();
     this.image.onload = this.loadImage.bind(this);
-    this.image.src = '/assets/ptitchat.png'; 
+    this.image.src = '/assets/arthur2.png'; 
 
     this.changeLoomType();
   }

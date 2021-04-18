@@ -12,6 +12,10 @@ export class Routes {
     //app.use(raw({type: 'application/octet-stream', limit : '2mb'}));
     app.route("/face/*").post(this.faces);
     app.route("/talend/statuses").post(this.statuses);
+    app.route("/activities").get(this.statuses);
+    app.route("/activities").post(this.statuses);
+    
+    app.route("/talend/statuses").post(this.statuses);
 
     app.use(express.static(path.join(__dirname, "public")));
     app.get('*', function(req, res){
