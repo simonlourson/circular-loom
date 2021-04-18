@@ -13,6 +13,9 @@ var Routes = /** @class */ (function () {
         //app.use(raw({type: 'application/octet-stream', limit : '2mb'}));
         app.route("/face/*").post(this.faces);
         app.route("/talend/statuses").post(this.statuses);
+        app.route("/activities").get(this.statuses);
+        app.route("/activities").post(this.statuses);
+        app.route("/talend/statuses").post(this.statuses);
         app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
         app.get('*', function (req, res) {
             res.sendFile(path_1.default.join(__dirname, 'public', 'index.html'));
